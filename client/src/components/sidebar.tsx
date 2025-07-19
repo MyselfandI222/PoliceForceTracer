@@ -47,14 +47,14 @@ export function Sidebar() {
             return (
               <li key={item.name}>
                 <Link href={item.href}>
-                  <a className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
+                  <div className={`flex items-center px-4 py-3 rounded-lg transition-colors cursor-pointer ${
                     isActive 
                       ? "text-primary bg-blue-50 border border-blue-200" 
                       : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                   }`}>
                     <Icon className="w-5 h-5 mr-3" />
                     {item.name}
-                  </a>
+                  </div>
                 </Link>
               </li>
             );
@@ -70,10 +70,10 @@ export function Sidebar() {
               return (
                 <li key={item.name}>
                   <Link href={item.href}>
-                    <a className="flex items-center px-4 py-3 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors">
+                    <div className="flex items-center px-4 py-3 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer">
                       <Icon className="w-5 h-5 mr-3" />
                       {item.name}
-                    </a>
+                    </div>
                   </Link>
                 </li>
               );
