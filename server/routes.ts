@@ -206,7 +206,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         name: z.string().min(1),
         department: z.string().min(1),
         badgeNumber: z.string().min(1),
-        signupToken: z.string().optional(), // Make token optional for public signup
+        signupToken: z.string().min(0).optional(), // Allow empty string or undefined
       });
 
       const data = publicSignupSchema.parse(req.body);
