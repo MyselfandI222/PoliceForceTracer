@@ -60,11 +60,25 @@ export class MemStorage implements IStorage {
     };
     this.departments.set(defaultDept.id, defaultDept);
 
+    // Create test user for easy login
+    const testUser: User = {
+      id: this.currentUserId++,
+      email: "test@test.com",
+      password: "$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi", // "password"
+      name: "Officer Test User",
+      department: "Metro PD - Cyber Crimes",
+      badgeNumber: "0001",
+      role: "officer",
+      isActive: true,
+      createdAt: new Date(),
+    };
+    this.users.set(testUser.id, testUser);
+
     // Create default admin user
     const adminUser: User = {
       id: this.currentUserId++,
       email: "admin@metropd.gov",
-      password: "$2b$10$hash", // In real app, this would be properly hashed
+      password: "$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi", // "password"
       name: "Det. Sarah Johnson",
       department: "Metro PD - Cyber Crimes",
       badgeNumber: "4421",
@@ -78,7 +92,7 @@ export class MemStorage implements IStorage {
     const sampleTrace1: Trace = {
       id: this.currentTraceId++,
       caseNumber: "2024-001",
-      userId: adminUser.id,
+      userId: testUser.id,
       cryptoType: "Bitcoin (BTC)",
       walletAddress: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
       victimName: "John Doe",
@@ -98,7 +112,7 @@ export class MemStorage implements IStorage {
     const sampleTrace2: Trace = {
       id: this.currentTraceId++,
       caseNumber: "2024-002",
-      userId: adminUser.id,
+      userId: testUser.id,
       cryptoType: "Ethereum (ETH)",
       walletAddress: "0x742d35Cc6251F6426C72",
       victimName: "Jane Smith",
