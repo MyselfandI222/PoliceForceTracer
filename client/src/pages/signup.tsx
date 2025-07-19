@@ -39,36 +39,21 @@ export default function Signup() {
   });
 
   useEffect(() => {
-    // Extract signup token from URL
+    // Extract signup token from URL (optional for public signup)
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     if (token) {
       setSignupToken(token);
-    } else {
-      toast({
-        title: "Invalid signup link",
-        description: "Please use the signup link provided by your department",
-        variant: "destructive",
-      });
-      setLocation("/login");
     }
-  }, [setLocation, toast]);
+    // Allow signup without token for public registration
+  }, []);
 
   const onSubmit = async (data: SignupFormData) => {
-    if (!signupToken) {
-      toast({
-        title: "Invalid signup token",
-        description: "Please use a valid signup link",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsLoading(true);
     try {
       await signup({
         ...data,
-        signupToken,
+        signupToken: signupToken || "", // Use empty string if no token
       });
       toast({
         title: "Account created successfully",

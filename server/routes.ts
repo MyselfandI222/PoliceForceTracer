@@ -199,17 +199,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/auth/signup", async (req, res) => {
     try {
-      const data = signupSchema.parse(req.body);
-      
-      // Validate signup token
-      const tokenData = await storage.validateSignupToken(data.signupToken);
-      if (!tokenData) {
-        return res.status(400).json({ message: "Invalid or expired signup token" });
-      }
+      // Modified signup schema for public registration
+      const publicSignupSchema = z.object({
+        email: z.string().email(),
+        password: z.string().min(6),
+        name: z.string().min(1),
+        department: z.string().min(1),
+        badgeNumber: z.string().min(1),
+        signupToken: z.string().optional(), // Make token optional for public signup
+      });
 
-      if (tokenData.email !== data.email) {
-        return res.status(400).json({ message: "Email mismatch" });
-      }
+      const data = publicSignupSchema.parse(req.body);
 
       // Check if user already exists
       const existingUser = await storage.getUserByEmail(data.email);

@@ -121,7 +121,7 @@ export default function Login() {
 
             <div className="mt-6 text-center">
               <p className="text-sm text-slate-600">
-                Need access? Contact your department administrator.
+                Don't have an account? <a href="/signup" className="text-primary hover:underline">Sign up here</a>
               </p>
             </div>
           </CardContent>
