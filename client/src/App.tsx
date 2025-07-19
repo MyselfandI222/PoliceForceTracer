@@ -8,6 +8,7 @@ import Login from "@/pages/login";
 import Signup from "@/pages/signup";
 import Dashboard from "@/pages/dashboard";
 import Admin from "@/pages/admin";
+import PremiumServices from "@/pages/premium-services";
 import NotFound from "@/pages/not-found";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -30,6 +31,11 @@ function Router() {
       <Route path="/admin">
         <ProtectedRoute>
           <Admin />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/premium">
+        <ProtectedRoute>
+          <PremiumServices />
         </ProtectedRoute>
       </Route>
       <Route path="/">

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { Layout } from "@/components/layout";
 import { TraceForm } from "@/components/trace-form";
 import { PremiumModal } from "@/components/premium-modal";
@@ -26,6 +27,7 @@ import { useToast } from "@/hooks/use-toast";
 export default function Dashboard() {
   const [showTraceForm, setShowTraceForm] = useState(false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
 
   const { data: user } = useQuery({
@@ -54,7 +56,7 @@ export default function Dashboard() {
   };
 
   const handlePremiumTrace = () => {
-    setShowPremiumModal(true);
+    setLocation("/premium");
   };
 
   const handleUploadCase = () => {
@@ -252,7 +254,7 @@ export default function Dashboard() {
                   className="w-full bg-white text-blue-600 hover:bg-blue-50 mt-4"
                   onClick={handlePremiumTrace}
                 >
-                  Upgrade to Premium
+                  View Premium Services
                 </Button>
               </CardContent>
             </Card>
