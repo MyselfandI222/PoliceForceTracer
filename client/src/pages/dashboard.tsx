@@ -137,6 +137,7 @@ export default function Dashboard() {
           <TraceForm 
             onSuccess={() => setShowTraceForm(false)}
             onCancel={() => setShowTraceForm(false)}
+            userType="officer"
           />
         </div>
       </Layout>
@@ -306,13 +307,13 @@ export default function Dashboard() {
                   </div>
                   <p className="text-blue-100">All free traces process automatically on Wednesdays at 11:59 PM</p>
                 </div>
-                <Button 
-                  className="w-full bg-white text-blue-600 hover:bg-blue-50 mt-4"
-                  onClick={handlePremiumTrace}
-                >
-                  <Zap className="h-4 w-4 mr-2" />
-                  Upgrade to Instant Processing
-                </Button>
+                <div className="mt-4 p-3 bg-blue-600/20 border border-blue-300 rounded text-sm">
+                  <div className="flex items-center gap-2 text-blue-200 mb-1">
+                    <Shield className="h-4 w-4" />
+                    <span className="font-medium">Law Enforcement Access</span>
+                  </div>
+                  <p className="text-blue-200">Premium instant processing is available to victims only. Contact your supervisor for urgent trace prioritization.</p>
+                </div>
               </CardContent>
             </Card>
           </div>

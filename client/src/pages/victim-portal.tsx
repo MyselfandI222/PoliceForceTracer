@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { VictimTraceForm } from "@/components/victim-trace-form";
 import { 
   Shield, 
   Search, 
@@ -34,6 +35,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function VictimPortal() {
   const [selectedTrace, setSelectedTrace] = useState<any>(null);
+  const [showTraceForm, setShowTraceForm] = useState(false);
   const { toast } = useToast();
 
   const { data: user } = useQuery({
@@ -42,6 +44,19 @@ export default function VictimPortal() {
   });
 
   // Mock victim data - would come from API
+  if (showTraceForm) {
+    return (
+      <Layout>
+        <div className="p-6">
+          <VictimTraceForm 
+            onSuccess={() => setShowTraceForm(false)}
+            onCancel={() => setShowTraceForm(false)}
+          />
+        </div>
+      </Layout>
+    );
+  }
+
   const victimCases = [
     {
       id: 1,
@@ -427,6 +442,15 @@ export default function VictimPortal() {
                     <CardContent className="p-6">
                       <div className="text-center space-y-4">
                         <Zap className="w-8 h-8 text-yellow-600 mx-auto" />
+                        <div>
+                          <Button 
+                            className="bg-yellow-600 hover:bg-yellow-700 text-white mb-4"
+                            onClick={() => setShowTraceForm(true)}
+                          >
+                            <Zap className="w-4 h-4 mr-2" />
+                            Start Instant Trace - $995
+                          </Button>
+                        </div>
                         <div>
                           <h4 className="font-semibold text-slate-900">Instant Trace</h4>
                           <p className="text-sm text-slate-600">Priority processing</p>

@@ -150,6 +150,7 @@ The application is designed for law enforcement use with security, audit trails,
 - Added transaction history analysis, risk scoring, and flow pattern detection
 - Created detailed trace reports with risk assessment and recommendations
 - All forms auto-fill with test credentials for streamlined testing
+- **Premium traces now exclusive to victim portal** - officers only have access to weekly processing
 
 ## Testing Credentials
 
