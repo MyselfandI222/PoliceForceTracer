@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { VictimTraceForm } from "@/components/victim-trace-form";
+
 import { 
   Shield, 
   Search, 
@@ -35,27 +35,12 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function VictimPortal() {
   const [selectedTrace, setSelectedTrace] = useState<any>(null);
-  const [showTraceForm, setShowTraceForm] = useState(false);
   const { toast } = useToast();
 
   const { data: user } = useQuery({
     queryKey: ["/api/auth/me"],
     queryFn: getCurrentUser,
   });
-
-  // Mock victim data - would come from API
-  if (showTraceForm) {
-    return (
-      <Layout>
-        <div className="p-6">
-          <VictimTraceForm 
-            onSuccess={() => setShowTraceForm(false)}
-            onCancel={() => setShowTraceForm(false)}
-          />
-        </div>
-      </Layout>
-    );
-  }
 
   const victimCases = [
     {
@@ -273,7 +258,7 @@ export default function VictimPortal() {
         <Tabs defaultValue="cases" className="space-y-6">
           <TabsList>
             <TabsTrigger value="cases">My Cases</TabsTrigger>
-            <TabsTrigger value="instant">Instant Trace</TabsTrigger>
+            <TabsTrigger value="instant">Upgrade Cases</TabsTrigger>
             <TabsTrigger value="history">Action History</TabsTrigger>
             <TabsTrigger value="contact">Contact Information</TabsTrigger>
           </TabsList>
@@ -337,6 +322,16 @@ export default function VictimPortal() {
                               Download Report
                             </Button>
                           )}
+                          {(case_.status === 'queued' || case_.status === 'processing') && (
+                            <Button 
+                              className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                              size="sm"
+                              onClick={handleUpgradeCase}
+                            >
+                              <Zap className="w-4 h-4 mr-2" />
+                              Upgrade to Instant ($995)
+                            </Button>
+                          )}
                         </div>
                       </div>
 
@@ -371,7 +366,7 @@ export default function VictimPortal() {
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center space-x-2">
                     <Zap className="w-5 h-5 text-yellow-600" />
-                    <span>Instant Trace Service</span>
+                    <span>Upgrade Cases to Instant Processing</span>
                   </CardTitle>
                   <Badge className="bg-yellow-100 text-yellow-800">
                     <Star className="w-3 h-3 mr-1" />
@@ -386,9 +381,9 @@ export default function VictimPortal() {
                       <Timer className="w-6 h-6 text-white" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-slate-900 mb-2">Expedited Investigation</h3>
+                      <h3 className="text-lg font-semibold text-slate-900 mb-2">Upgrade Existing Cases</h3>
                       <p className="text-slate-700 mb-4">
-                        Pay $995 per trace for immediate processing instead of waiting until Wednesday midnight. Each trace can be upgraded individually - you choose which cases need urgent attention.
+                        Upgrade cases submitted by law enforcement to instant processing for $995 per trace. Cases automatically process free every Wednesday at midnight, or you can upgrade individual cases for immediate 1-2 hour processing.
                       </p>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div className="flex items-center space-x-2">
@@ -443,17 +438,15 @@ export default function VictimPortal() {
                       <div className="text-center space-y-4">
                         <Zap className="w-8 h-8 text-yellow-600 mx-auto" />
                         <div>
-                          <Button 
-                            className="bg-yellow-600 hover:bg-yellow-700 text-white mb-4"
-                            onClick={() => setShowTraceForm(true)}
-                          >
-                            <Zap className="w-4 h-4 mr-2" />
-                            Start Instant Trace - $995 per trace
-                          </Button>
+                          <div className="bg-slate-100 p-3 rounded-lg mb-4">
+                            <p className="text-sm text-slate-600 text-center">
+                              Select a case from "My Cases" tab to upgrade
+                            </p>
+                          </div>
                         </div>
                         <div>
-                          <h4 className="font-semibold text-slate-900">Instant Trace</h4>
-                          <p className="text-sm text-slate-600">Priority processing</p>
+                          <h4 className="font-semibold text-slate-900">Instant Processing</h4>
+                          <p className="text-sm text-slate-600">Upgrade existing cases</p>
                         </div>
                         <div className="space-y-2">
                           <div className="text-2xl font-bold text-yellow-600">$995</div>
@@ -461,11 +454,11 @@ export default function VictimPortal() {
                           <div className="text-xs text-slate-500">Priority queue</div>
                         </div>
                         <Button 
-                          className="w-full bg-yellow-600 hover:bg-yellow-700 text-white"
-                          onClick={handleUpgradeCase}
+                          className="w-full bg-slate-400 text-white cursor-not-allowed"
+                          disabled
                         >
                           <CreditCard className="w-4 h-4 mr-2" />
-                          Upgrade Case
+                          Select Case to Upgrade
                         </Button>
                       </div>
                     </CardContent>
