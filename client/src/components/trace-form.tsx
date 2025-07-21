@@ -160,8 +160,18 @@ export function TraceForm({ onSuccess, onCancel }: TraceFormProps) {
                 <FormItem>
                   <FormLabel>Wallet Address</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter cryptocurrency wallet address" {...field} />
+                    <Input placeholder="1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa" {...field} />
                   </FormControl>
+                  <div className="text-xs text-blue-600 mt-1 p-2 bg-blue-50 rounded border">
+                    <strong>Test Addresses (with real transaction history):</strong>
+                    <div className="mt-1 space-y-1 font-mono text-xs">
+                      <div><strong>Bitcoin:</strong> 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa (Satoshi's Genesis)</div>
+                      <div><strong>Bitcoin:</strong> 1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2 (BitFinex Hack)</div>
+                      <div><strong>Ethereum:</strong> 0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae (Ethereum Foundation)</div>
+                      <div><strong>Ethereum:</strong> 0x3f5ce5fbfe3e9af3971dd833d26ba9b5c936f0be (Binance Hot Wallet)</div>
+                    </div>
+                    <div className="text-blue-700 mt-2">These addresses have extensive transaction histories perfect for testing blockchain analysis.</div>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
