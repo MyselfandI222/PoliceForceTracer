@@ -247,7 +247,7 @@ export function TraceForm({ onSuccess, onCancel }: TraceFormProps) {
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="free" id="free" />
                               <Label htmlFor="free" className="text-sm text-blue-700">
-                                Free Daily Trace (Processed at 11:59 PM)
+                                Free Weekly Trace (Processed Wednesdays 11:59 PM)
                               </Label>
                             </div>
                             <div className="flex items-center space-x-2">
@@ -265,8 +265,8 @@ export function TraceForm({ onSuccess, onCancel }: TraceFormProps) {
                               <span className="font-medium">Scheduled Processing</span>
                             </div>
                             <p className="text-green-700 mt-1">
-                              Your trace will be automatically processed tonight at 11:59 PM along with all other free traces. 
-                              Results will be available tomorrow morning.
+                              Your trace will be automatically processed this Wednesday at 11:59 PM along with all other free traces. 
+                              Results will be available Thursday morning.
                             </p>
                           </div>
                         )}

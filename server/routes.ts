@@ -427,7 +427,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // For free traces, only allow if admin or already completed
         if (req.user.role !== 'admin' && req.user.role !== 'super_admin' && trace.status !== 'completed') {
           return res.status(403).json({ 
-            message: "Free traces are processed automatically at 11:59 PM daily. Please wait for scheduled processing.",
+            message: "Free traces are processed automatically on Wednesdays at 11:59 PM. Please wait for scheduled processing.",
             nextProcessingTime: traceScheduler.getNextProcessingTime()
           });
         }

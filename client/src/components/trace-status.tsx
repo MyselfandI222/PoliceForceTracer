@@ -34,7 +34,7 @@ export function TraceStatus({ status, isPremium, estimatedCompletion, className 
     switch (status) {
       case 'completed': return 'Completed';
       case 'processing': return isPremium ? 'Processing (Premium)' : 'Processing';
-      case 'queued': return isPremium ? 'Premium Queue' : 'Scheduled for 11:59 PM';
+      case 'queued': return isPremium ? 'Premium Queue' : 'Scheduled for Wed 11:59 PM';
       case 'failed': return 'Failed';
       default: return 'Unknown';
     }
@@ -90,7 +90,7 @@ export function TraceStatus({ status, isPremium, estimatedCompletion, className 
           {estimatedCompletion && (
             <p className="text-xs text-slate-500">
               {status === 'queued' && !isPremium 
-                ? `Next processing: Today at 11:59 PM (${formatEstimatedCompletion(estimatedCompletion)})`
+                ? `Next processing: Wednesday at 11:59 PM (${formatEstimatedCompletion(estimatedCompletion)})`
                 : `Est. completion: ${formatEstimatedCompletion(estimatedCompletion)}`
               }
             </p>
@@ -101,7 +101,7 @@ export function TraceStatus({ status, isPremium, estimatedCompletion, className 
       {status === 'queued' && !isPremium && (
         <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded border">
           <Clock className="h-4 w-4 inline mr-1" />
-          <strong>Free Trace:</strong> All free traces are processed automatically at 11:59 PM daily. 
+          <strong>Free Trace:</strong> All free traces are processed automatically on Wednesdays at 11:59 PM. 
           Upgrade to Premium for instant processing.
         </div>
       )}

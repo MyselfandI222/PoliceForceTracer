@@ -14,16 +14,17 @@ class TraceScheduler {
       this.checkAndProcessTraces();
     }, 60000); // 60 seconds
 
-    console.log("Trace scheduler started - free traces will process at 11:59 PM daily");
+    console.log("Trace scheduler started - free traces will process on Wednesdays at 11:59 PM");
   }
 
   private async checkAndProcessTraces() {
     const now = new Date();
     const hour = now.getHours();
     const minute = now.getMinutes();
+    const dayOfWeek = now.getDay(); // 0 = Sunday, 3 = Wednesday
 
-    // Process free traces at 11:59 PM (23:59)
-    if (hour === 23 && minute === 59 && !this.isProcessing) {
+    // Process free traces on Wednesdays at 11:59 PM (23:59)
+    if (dayOfWeek === 3 && hour === 23 && minute === 59 && !this.isProcessing) {
       await this.processFreeTraces();
     }
   }
@@ -119,13 +120,24 @@ class TraceScheduler {
     const now = new Date();
     const nextRun = new Date();
     
-    // Set to 11:59 PM today
-    nextRun.setHours(23, 59, 0, 0);
+    // Calculate days until next Wednesday
+    const currentDay = now.getDay(); // 0 = Sunday, 3 = Wednesday
+    let daysUntilWednesday = (3 - currentDay + 7) % 7;
     
-    // If it's already past 11:59 PM today, schedule for tomorrow
-    if (now.getTime() >= nextRun.getTime()) {
-      nextRun.setDate(nextRun.getDate() + 1);
+    // If it's Wednesday but past 11:59 PM, schedule for next Wednesday
+    if (currentDay === 3) {
+      const todayAt1159 = new Date(now);
+      todayAt1159.setHours(23, 59, 0, 0);
+      
+      if (now.getTime() >= todayAt1159.getTime()) {
+        daysUntilWednesday = 7; // Next Wednesday
+      } else {
+        daysUntilWednesday = 0; // Today (Wednesday)
+      }
     }
+    
+    nextRun.setDate(now.getDate() + daysUntilWednesday);
+    nextRun.setHours(23, 59, 0, 0);
     
     return nextRun;
   }
@@ -138,7 +150,7 @@ class TraceScheduler {
       completion.setHours(completion.getHours() + 1);
       return completion;
     } else {
-      // Free traces complete at next 11:59 PM
+      // Free traces complete at next Wednesday 11:59 PM
       return this.getNextProcessingTime();
     }
   }

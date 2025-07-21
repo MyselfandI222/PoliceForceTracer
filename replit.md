@@ -144,7 +144,7 @@ The application is designed for law enforcement use with security, audit trails,
 ## Recent Changes (July 21, 2025)
 
 **Implemented Scheduled Trace Processing System:**
-- Free traces now process automatically at 11:59 PM daily (batch processing)
+- Free traces now process automatically on Wednesdays at 11:59 PM (weekly batch processing)
 - Premium traces ($995) process immediately for 1-2 hour completion  
 - Built comprehensive cryptocurrency tracking system with realistic blockchain analysis
 - Added transaction history analysis, risk scoring, and flow pattern detection

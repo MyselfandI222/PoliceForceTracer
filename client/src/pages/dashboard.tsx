@@ -284,15 +284,15 @@ export default function Dashboard() {
             <Card className="mt-6 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-2">Current Plan</h3>
-                <p className="text-blue-100 mb-4">Free Tier - Daily Processing</p>
+                <p className="text-blue-100 mb-4">Free Tier - Weekly Processing</p>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span>Processing Time:</span>
-                    <span>11:59 PM Daily</span>
+                    <span>Processing Day:</span>
+                    <span>Wednesdays 11:59 PM</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Next Processing:</span>
-                    <span>Today 11:59 PM</span>
+                    <span>Next Wednesday</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Queue Status:</span>
@@ -304,7 +304,7 @@ export default function Dashboard() {
                     <Clock className="h-4 w-4" />
                     <span className="font-medium">Scheduled Processing</span>
                   </div>
-                  <p className="text-blue-100">All free traces process automatically at 11:59 PM daily</p>
+                  <p className="text-blue-100">All free traces process automatically on Wednesdays at 11:59 PM</p>
                 </div>
                 <Button 
                   className="w-full bg-white text-blue-600 hover:bg-blue-50 mt-4"
