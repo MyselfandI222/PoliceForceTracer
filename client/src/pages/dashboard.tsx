@@ -59,14 +59,10 @@ export default function Dashboard() {
     setShowTraceForm(true);
   };
 
-  const handlePremiumTrace = () => {
-    setLocation("/premium");
-  };
-
   const handleUploadCase = () => {
     toast({
-      title: "Feature Coming Soon",
-      description: "Bulk case upload will be available in the next update.",
+      title: "Upload Evidence",
+      description: "Evidence file upload system will be available in the next update.",
     });
   };
 
@@ -152,7 +148,7 @@ export default function Dashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-slate-900">Investigation Dashboard</h2>
-            <p className="text-slate-600">Manage crypto theft investigations and traces</p>
+            <p className="text-slate-600">Submit case information for cryptocurrency theft investigations</p>
           </div>
           <div className="flex items-center space-x-4">
             <div className="relative">
@@ -179,7 +175,7 @@ export default function Dashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-slate-600">Active Traces</p>
+                  <p className="text-sm text-slate-600">Submitted Cases</p>
                   <p className="text-3xl font-bold text-slate-900">{stats.activeTraces}</p>
                 </div>
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -262,14 +258,7 @@ export default function Dashboard() {
                   onClick={handleStartTrace}
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Start New Trace
-                </Button>
-                <Button 
-                  className="w-full bg-accent hover:bg-green-700"
-                  onClick={handlePremiumTrace}
-                >
-                  <Zap className="w-4 h-4 mr-2" />
-                  Premium Instant Trace
+                  Submit Case Information
                 </Button>
                 <Button 
                   variant="outline"
@@ -277,7 +266,7 @@ export default function Dashboard() {
                   onClick={handleUploadCase}
                 >
                   <Upload className="w-4 h-4 mr-2" />
-                  Upload Case Data
+                  Upload Evidence Files
                 </Button>
               </CardContent>
             </Card>
@@ -285,35 +274,35 @@ export default function Dashboard() {
             {/* Service Tier Info */}
             <Card className="mt-6 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
               <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-2">Current Plan</h3>
-                <p className="text-blue-100 mb-4">Free Tier - Weekly Processing</p>
+                <h3 className="text-lg font-semibold mb-2">Officer Role</h3>
+                <p className="text-blue-100 mb-4">Case Information Submission</p>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span>Processing Day:</span>
-                    <span>Wednesdays 11:59 PM</span>
+                    <span>Your Role:</span>
+                    <span>Input case details only</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Next Processing:</span>
-                    <span>Next Wednesday</span>
+                    <span>Investigation:</span>
+                    <span>Automated by system</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Queue Status:</span>
-                    <span>On Schedule</span>
+                    <span>Processing Choice:</span>
+                    <span>Victim decides</span>
                   </div>
                 </div>
                 <div className="mt-4 p-3 bg-blue-700 rounded-lg text-sm">
                   <div className="flex items-center gap-2 mb-1">
                     <Clock className="h-4 w-4" />
-                    <span className="font-medium">Scheduled Processing</span>
+                    <span className="font-medium">Automated Processing</span>
                   </div>
-                  <p className="text-blue-100">All free traces process automatically on Wednesdays at 11:59 PM</p>
+                  <p className="text-blue-100">System processes all cases automatically - free weekly (Wednesdays) or instant premium (victim choice)</p>
                 </div>
                 <div className="mt-4 p-3 bg-blue-600/20 border border-blue-300 rounded text-sm">
                   <div className="flex items-center gap-2 text-blue-200 mb-1">
                     <Shield className="h-4 w-4" />
-                    <span className="font-medium">Law Enforcement Access</span>
+                    <span className="font-medium">Officer Workflow</span>
                   </div>
-                  <p className="text-blue-200">Premium instant processing is available to victims only. Contact your supervisor for urgent trace prioritization.</p>
+                  <p className="text-blue-200">Submit case information → System investigates → Victim chooses processing speed → Automated analysis → Reports generated</p>
                 </div>
               </CardContent>
             </Card>
@@ -324,7 +313,7 @@ export default function Dashboard() {
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle>Recent Traces</CardTitle>
+                  <CardTitle>Recent Case Submissions</CardTitle>
                   <Button variant="ghost" size="sm">View All</Button>
                 </div>
               </CardHeader>
@@ -333,7 +322,7 @@ export default function Dashboard() {
                   {recentTraces.length === 0 ? (
                     <div className="text-center py-8 text-slate-500">
                       <Search className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                      <p>No traces yet. Start your first investigation!</p>
+                      <p>No cases submitted yet. Submit your first case information!</p>
                     </div>
                   ) : (
                     recentTraces.map((trace: any) => (
