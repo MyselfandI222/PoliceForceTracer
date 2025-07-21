@@ -9,6 +9,7 @@ import Signup from "@/pages/signup";
 import Dashboard from "@/pages/dashboard";
 import Admin from "@/pages/admin";
 import PremiumServices from "@/pages/premium-services";
+import Settings from "@/pages/settings";
 import NotFound from "@/pages/not-found";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -36,6 +37,11 @@ function Router() {
       <Route path="/premium">
         <ProtectedRoute>
           <PremiumServices />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/settings">
+        <ProtectedRoute>
+          <Settings />
         </ProtectedRoute>
       </Route>
       <Route path="/">
