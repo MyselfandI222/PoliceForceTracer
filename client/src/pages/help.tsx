@@ -1,0 +1,513 @@
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getCurrentUser } from "@/lib/auth";
+import { Layout } from "@/components/layout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { 
+  HelpCircle, 
+  Shield, 
+  User, 
+  Clock, 
+  DollarSign, 
+  Search, 
+  FileText, 
+  Phone, 
+  Mail, 
+  AlertCircle,
+  CheckCircle,
+  Zap,
+  Calendar,
+  Info
+} from "lucide-react";
+
+export default function Help() {
+  const { data: user } = useQuery({
+    queryKey: ["/api/auth/me"],
+    queryFn: getCurrentUser,
+  });
+
+  const getUserRole = () => {
+    if (user?.role === "admin" || user?.role === "super_admin") return "admin";
+    if (user?.role === "officer") return "officer";
+    return "victim";
+  };
+
+  const userRole = getUserRole();
+
+  const getWelcomeSection = () => {
+    switch (userRole) {
+      case "admin":
+        return {
+          title: "Administrator Dashboard Help",
+          icon: <Shield className="w-6 h-6 text-blue-600" />,
+          description: "Welcome to the CryptoTrace Administrator Portal. You have full oversight capabilities for managing officers, departments, and system-wide cryptocurrency investigation operations.",
+          features: [
+            "Manage officer accounts and permissions",
+            "Monitor department-wide case statistics",
+            "Access comprehensive performance analytics", 
+            "Generate administrative reports and exports",
+            "Configure system settings and processing schedules"
+          ]
+        };
+      case "officer":
+        return {
+          title: "Law Enforcement Portal Help",
+          icon: <Shield className="w-6 h-6 text-blue-600" />,
+          description: "Welcome to the CryptoTrace Law Enforcement Portal. Your role is to submit cryptocurrency theft cases for victims. Once submitted, victims will be notified to choose their preferred processing options.",
+          features: [
+            "Submit detailed case information for cryptocurrency thefts",
+            "Upload evidence and documentation",
+            "Track submitted cases and their status",
+            "Access case management tools",
+            "Coordinate with victims on investigation priorities"
+          ]
+        };
+      case "victim":
+        return {
+          title: "Victim Portal Help", 
+          icon: <User className="w-6 h-6 text-blue-600" />,
+          description: "Welcome to the CryptoTrace Victim Portal. Here you can view cases submitted by law enforcement and choose between free weekly processing or premium instant traces for urgent situations.",
+          features: [
+            "View cases submitted by law enforcement officers",
+            "Choose between free weekly processing (Wednesdays) or instant traces ($995 per trace)",
+            "Track investigation progress and status updates",
+            "Download completed investigation reports",
+            "Access detailed blockchain analysis results"
+          ]
+        };
+      default:
+        return {
+          title: "CryptoTrace Help Center",
+          icon: <HelpCircle className="w-6 h-6 text-blue-600" />,
+          description: "Welcome to CryptoTrace, the comprehensive cryptocurrency investigation platform for law enforcement and victims.",
+          features: []
+        };
+    }
+  };
+
+  const welcomeSection = getWelcomeSection();
+
+  const commonFAQs = [
+    {
+      question: "What is CryptoTrace?",
+      answer: "CryptoTrace is a specialized platform designed for cryptocurrency theft investigations. It provides advanced blockchain analysis tools and connects law enforcement agencies with victims to facilitate efficient cryptocurrency recovery operations."
+    },
+    {
+      question: "How secure is my data?",
+      answer: "All data is encrypted end-to-end and stored on secure servers. We follow law enforcement-grade security protocols and comply with all relevant data protection regulations. Access is strictly controlled through role-based permissions."
+    },
+    {
+      question: "What cryptocurrencies are supported?",
+      answer: "We support Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Bitcoin Cash (BCH), and most major cryptocurrencies. Our analysis covers transaction history, wallet clustering, exchange tracking, and cross-chain movements."
+    }
+  ];
+
+  const roleFAQs = {
+    admin: [
+      {
+        question: "How do I add new officers to the system?",
+        answer: "Navigate to the Officer Management section and use the 'Add Officer' button. You'll need their badge number, department information, and email address. Officers will receive signup instructions via email."
+      },
+      {
+        question: "How can I view department performance metrics?",
+        answer: "The main dashboard provides comprehensive statistics including case completion rates, recovery amounts, and officer performance. Use the time range filters to analyze specific periods."
+      },
+      {
+        question: "How do I generate reports for my department?",
+        answer: "Use the 'Export Report' button on any data view. Reports can be generated for specific officers, time periods, or case types. All exports include detailed metadata and are suitable for official documentation."
+      }
+    ],
+    officer: [
+      {
+        question: "How do I submit a new case?",
+        answer: "Click 'Submit New Case' on your dashboard. Fill in all required information including case number, cryptocurrency details, wallet addresses, and incident description. The victim will be notified to choose processing options."
+      },
+      {
+        question: "What information do I need to submit a case?",
+        answer: "Required information includes: case number, victim name, cryptocurrency type, suspect wallet address, incident date, stolen amount estimate, and detailed description of the theft incident."
+      },
+      {
+        question: "Can I choose processing speed for cases?",
+        answer: "No, processing decisions are made by victims. You submit case information, and victims choose between free weekly processing (Wednesdays at midnight) or premium instant processing ($995 per trace)."
+      },
+      {
+        question: "How do I track submitted cases?",
+        answer: "Your dashboard shows all submitted cases with current status. Statuses include: Submitted (awaiting victim decision), Queued (scheduled for Wednesday), Processing (investigation in progress), and Completed (results available)."
+      }
+    ],
+    victim: [
+      {
+        question: "What's the difference between free and instant processing?",
+        answer: "Free processing occurs every Wednesday at midnight and results are available Thursday morning. Instant processing costs $995 per trace and provides results within 1-2 hours. Each case can be decided individually."
+      },
+      {
+        question: "How do I upgrade a case to instant processing?",
+        answer: "In your case list, click 'View Details' then 'Upgrade to Instant Trace'. You'll be redirected to secure payment processing. Once payment is confirmed, investigation begins immediately."
+      },
+      {
+        question: "What's included in the investigation report?",
+        answer: "Reports include comprehensive blockchain analysis, transaction flow mapping, risk assessment scores, potential recovery opportunities, connected wallet identification, and actionable recommendations for law enforcement."
+      },
+      {
+        question: "How do I download my investigation results?",
+        answer: "Once a case is completed, a 'Download Report' button appears in your case details. Reports are available as secure PDF files and remain accessible indefinitely in your account."
+      },
+      {
+        question: "Can I submit cases directly?",
+        answer: "Yes, you can submit your own cases using the 'Start New Trace' option. You'll have immediate access to choose between free weekly processing or instant processing during submission."
+      }
+    ]
+  };
+
+  const contactInfo = {
+    admin: {
+      title: "Administrator Support",
+      contacts: [
+        { type: "Technical Support", email: "admin-support@cryptotrace.gov", phone: "(555) 100-1000" },
+        { type: "System Issues", email: "system-admin@cryptotrace.gov", phone: "(555) 100-1001" },
+        { type: "Account Management", email: "accounts@cryptotrace.gov", phone: "(555) 100-1002" }
+      ]
+    },
+    officer: {
+      title: "Law Enforcement Support",
+      contacts: [
+        { type: "Case Submission Help", email: "officer-support@cryptotrace.gov", phone: "(555) 200-2000" },
+        { type: "Training & Resources", email: "training@cryptotrace.gov", phone: "(555) 200-2001" },
+        { type: "Emergency Cases", email: "emergency@cryptotrace.gov", phone: "(555) 200-URGENT" }
+      ]
+    },
+    victim: {
+      title: "Victim Support Services",
+      contacts: [
+        { type: "General Support", email: "victim-support@cryptotrace.gov", phone: "(555) 300-3000" },
+        { type: "Payment Issues", email: "billing@cryptotrace.gov", phone: "(555) 300-3001" },
+        { type: "Case Status Updates", email: "case-updates@cryptotrace.gov", phone: "(555) 300-3002" }
+      ]
+    }
+  };
+
+  return (
+    <Layout>
+      <div className="p-6 max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center space-x-3 mb-4">
+            {welcomeSection.icon}
+            <h1 className="text-3xl font-bold text-slate-900">{welcomeSection.title}</h1>
+          </div>
+          <p className="text-slate-600 text-lg mb-6">{welcomeSection.description}</p>
+          
+          {welcomeSection.features.length > 0 && (
+            <Card className="bg-blue-50 border-blue-200">
+              <CardContent className="p-6">
+                <h3 className="font-semibold text-blue-900 mb-3">Your Portal Capabilities:</h3>
+                <ul className="space-y-2">
+                  {welcomeSection.features.map((feature, index) => (
+                    <li key={index} className="flex items-center space-x-2 text-blue-800">
+                      <CheckCircle className="w-4 h-4" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
+        <Tabs defaultValue="getting-started" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="getting-started">Getting Started</TabsTrigger>
+            <TabsTrigger value="faq">FAQ</TabsTrigger>
+            <TabsTrigger value="contact">Contact Support</TabsTrigger>
+            <TabsTrigger value="resources">Resources</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="getting-started" className="space-y-6">
+            {userRole === "officer" && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <FileText className="w-5 h-5" />
+                    <span>Submitting Your First Case</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="text-center p-4 border rounded-lg">
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span className="font-bold text-blue-600">1</span>
+                      </div>
+                      <h4 className="font-medium mb-2">Gather Information</h4>
+                      <p className="text-sm text-slate-600">Collect case details, wallet addresses, and incident documentation</p>
+                    </div>
+                    <div className="text-center p-4 border rounded-lg">
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span className="font-bold text-blue-600">2</span>
+                      </div>
+                      <h4 className="font-medium mb-2">Submit Case</h4>
+                      <p className="text-sm text-slate-600">Use the 'Submit New Case' button and fill all required fields</p>
+                    </div>
+                    <div className="text-center p-4 border rounded-lg">
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span className="font-bold text-blue-600">3</span>
+                      </div>
+                      <h4 className="font-medium mb-2">Victim Notification</h4>
+                      <p className="text-sm text-slate-600">Victim receives notification to choose processing options</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {userRole === "victim" && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Search className="w-5 h-5" />
+                    <span>Understanding Your Options</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="border rounded-lg p-4">
+                      <div className="flex items-center space-x-2 mb-3">
+                        <Clock className="w-5 h-5 text-blue-600" />
+                        <h4 className="font-semibold">Free Weekly Processing</h4>
+                      </div>
+                      <p className="text-slate-600 mb-3">Cases process automatically every Wednesday at midnight</p>
+                      <ul className="text-sm space-y-1">
+                        <li>• No cost</li>
+                        <li>• Results Thursday morning</li>
+                        <li>• Same quality analysis</li>
+                        <li>• Batch processing with other cases</li>
+                      </ul>
+                    </div>
+                    <div className="border rounded-lg p-4 bg-amber-50 border-amber-200">
+                      <div className="flex items-center space-x-2 mb-3">
+                        <Zap className="w-5 h-5 text-amber-600" />
+                        <h4 className="font-semibold">Instant Processing</h4>
+                      </div>
+                      <p className="text-slate-600 mb-3">$995 per trace for immediate investigation</p>
+                      <ul className="text-sm space-y-1">
+                        <li>• Results in 1-2 hours</li>
+                        <li>• Priority investigation</li>
+                        <li>• Same comprehensive analysis</li>
+                        <li>• Individual case processing</li>
+                      </ul>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {userRole === "admin" && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Shield className="w-5 h-5" />
+                    <span>Department Management Overview</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <h4 className="font-medium">Key Responsibilities:</h4>
+                      <ul className="text-sm space-y-1 text-slate-600">
+                        <li>• Monitor department case volumes and completion rates</li>
+                        <li>• Track officer performance and specializations</li>
+                        <li>• Generate reports for department leadership</li>
+                        <li>• Manage officer accounts and permissions</li>
+                      </ul>
+                    </div>
+                    <div className="space-y-3">
+                      <h4 className="font-medium">Processing Schedule:</h4>
+                      <div className="text-sm space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <Calendar className="w-4 h-4 text-blue-600" />
+                          <span>Free traces: Wednesdays at 11:59 PM</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Zap className="w-4 h-4 text-amber-600" />
+                          <span>Premium traces: Immediate processing</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="faq" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Frequently Asked Questions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Accordion type="single" collapsible className="w-full">
+                  {commonFAQs.map((faq, index) => (
+                    <AccordionItem key={`common-${index}`} value={`common-${index}`}>
+                      <AccordionTrigger>{faq.question}</AccordionTrigger>
+                      <AccordionContent>{faq.answer}</AccordionContent>
+                    </AccordionItem>
+                  ))}
+                  
+                  {roleFAQs[userRole]?.map((faq, index) => (
+                    <AccordionItem key={`role-${index}`} value={`role-${index}`}>
+                      <AccordionTrigger>{faq.question}</AccordionTrigger>
+                      <AccordionContent>{faq.answer}</AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="contact" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>{contactInfo[userRole].title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {contactInfo[userRole].contacts.map((contact, index) => (
+                    <div key={index} className="border rounded-lg p-4">
+                      <h4 className="font-semibold mb-3">{contact.type}</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2 text-sm">
+                          <Mail className="w-4 h-4 text-slate-500" />
+                          <span>{contact.email}</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-sm">
+                          <Phone className="w-4 h-4 text-slate-500" />
+                          <span>{contact.phone}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-red-50 border-red-200">
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-3">
+                  <AlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-red-900 mb-2">Emergency Support</h4>
+                    <p className="text-red-800 text-sm mb-3">
+                      For urgent cases requiring immediate attention outside normal business hours:
+                    </p>
+                    <div className="space-y-1 text-sm">
+                      <div className="flex items-center space-x-2">
+                        <Phone className="w-4 h-4" />
+                        <span className="font-medium">24/7 Emergency: (555) 911-CRYPTO</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Mail className="w-4 h-4" />
+                        <span>emergency@cryptotrace.gov</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="resources" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Info className="w-5 h-5" />
+                    <span>System Status</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span>Platform Status</span>
+                    <Badge className="bg-green-100 text-green-800">
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      Operational
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Blockchain Analysis Engine</span>
+                    <Badge className="bg-green-100 text-green-800">
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      Online
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Next Scheduled Processing</span>
+                    <Badge className="bg-blue-100 text-blue-800">
+                      <Calendar className="w-3 h-3 mr-1" />
+                      Wednesday 11:59 PM
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Processing Schedule</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3">
+                      <Clock className="w-5 h-5 text-blue-600" />
+                      <div>
+                        <p className="font-medium">Free Processing</p>
+                        <p className="text-sm text-slate-600">Every Wednesday at 11:59 PM</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <Zap className="w-5 h-5 text-amber-600" />
+                      <div>
+                        <p className="font-medium">Instant Processing</p>
+                        <p className="text-sm text-slate-600">Available 24/7 with $995 payment</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Best Practices & Tips</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-semibold mb-3">Data Collection Tips:</h4>
+                    <ul className="text-sm space-y-2 text-slate-600">
+                      <li>• Gather all available wallet addresses involved</li>
+                      <li>• Document transaction timestamps and amounts</li>
+                      <li>• Include exchange account information if available</li>
+                      <li>• Note any communications with suspects</li>
+                      <li>• Preserve screenshot evidence</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-3">When to Use Instant Processing:</h4>
+                    <ul className="text-sm space-y-2 text-slate-600">
+                      <li>• Time-sensitive legal proceedings</li>
+                      <li>• High-value cases ($50k+)</li>
+                      <li>• Active ongoing scams</li>
+                      <li>• Exchange freeze requests</li>
+                      <li>• Insurance claim deadlines</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </Layout>
+  );
+}
