@@ -15,7 +15,7 @@ export interface AuthResponse {
 }
 
 export const getAuthToken = (): string | null => {
-  return localStorage.getItem('auth_token');
+  return localStorage.getItem('auth_token') || localStorage.getItem('token');
 };
 
 export const setAuthToken = (token: string): void => {
@@ -34,6 +34,7 @@ export const login = async (email: string, password: string): Promise<AuthRespon
   const response = await apiRequest('POST', '/api/auth/login', { email, password });
   const data = await response.json();
   setAuthToken(data.token);
+  localStorage.setItem("userType", "officer"); // Set default user type for officers
   return data;
 };
 
@@ -53,6 +54,8 @@ export const signup = async (signupData: {
 
 export const logout = (): void => {
   removeAuthToken();
+  localStorage.removeItem('token');
+  localStorage.removeItem('userType');
 };
 
 export const getCurrentUser = async (): Promise<User> => {

@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Shield, Loader2 } from "lucide-react";
+import { Shield, Loader2, ArrowLeft } from "lucide-react";
 import { login } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 
@@ -54,12 +54,22 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
+        {/* Back Button */}
+        <Button 
+          variant="ghost" 
+          className="mb-6 hover:bg-white hover:bg-opacity-20"
+          onClick={() => setLocation('/login')}
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Portal Selection
+        </Button>
+
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-primary rounded-xl mx-auto mb-4 flex items-center justify-center">
             <Shield className="text-white text-2xl" />
           </div>
           <h1 className="text-3xl font-bold text-slate-900">CryptoTrace</h1>
-          <p className="text-slate-600 mt-2">Law Enforcement Portal</p>
+          <p className="text-slate-600 mt-2">Police Officer Portal</p>
         </div>
 
         <Card>
