@@ -69,12 +69,12 @@ export default function Help() {
         return {
           title: "Victim Portal Help", 
           icon: <User className="w-6 h-6 text-blue-600" />,
-          description: "Welcome to the CryptoTrace Victim Portal. View cases submitted by law enforcement and choose your processing speed: free weekly processing (every Wednesday at midnight) or instant premium processing ($995 per trace) for urgent situations.",
+          description: "Welcome to the CryptoTrace Victim Portal. View cases submitted by law enforcement officers and upgrade them to instant processing if needed. You cannot submit new cases - only law enforcement can input case information.",
           features: [
-            "Review case information submitted by law enforcement",
-            "Choose between free weekly processing or instant premium processing",
-            "Free processing: Every Wednesday at midnight, results Thursday morning",
-            "Premium processing: $995 per trace, results within 1-2 hours",
+            "Review case information submitted by law enforcement officers",
+            "Upgrade cases to instant premium processing ($995 per trace)",
+            "Free processing: Automatic every Wednesday at midnight, results Thursday",
+            "Premium processing: Immediate results within 1-2 hours",
             "Download detailed automated investigation reports and blockchain analysis"
           ]
         };
@@ -141,7 +141,7 @@ export default function Help() {
     victim: [
       {
         question: "What's the difference between free and instant processing?",
-        answer: "Free processing occurs every Wednesday at midnight and results are available Thursday morning. Instant processing costs $995 per trace and provides results within 1-2 hours. Each case can be decided individually."
+        answer: "Free processing occurs automatically every Wednesday at midnight with results available Thursday morning. Instant processing costs $995 per trace and provides results within 1-2 hours. You can only upgrade existing cases submitted by law enforcement."
       },
       {
         question: "How do I upgrade a case to instant processing?",
@@ -156,8 +156,8 @@ export default function Help() {
         answer: "Once a case is completed, a 'Download Report' button appears in your case details. Reports are available as secure PDF files and remain accessible indefinitely in your account."
       },
       {
-        question: "Can I submit cases directly?",
-        answer: "Yes, you can submit your own cases using the 'Start New Trace' option. You'll have immediate access to choose between free weekly processing or instant processing during submission."
+        question: "Can I submit new cases or upload case data?",
+        answer: "No, victims cannot submit new cases or upload case information. Only law enforcement officers can input case data. Your role is to review cases submitted by officers and choose to upgrade them to instant processing if needed."
       }
     ]
   };
@@ -267,10 +267,17 @@ export default function Help() {
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <Search className="w-5 h-5" />
-                    <span>Understanding Your Options</span>
+                    <span>Understanding Your Role</span>
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-6">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-blue-900 mb-2">Important: Victims Cannot Submit New Cases</h4>
+                    <p className="text-blue-800 text-sm">
+                      Only law enforcement officers can input case information. Your role is to review cases submitted by officers and choose to upgrade them to instant processing if needed.
+                    </p>
+                  </div>
+                  
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="border rounded-lg p-4">
                       <div className="flex items-center space-x-2 mb-3">
@@ -279,7 +286,7 @@ export default function Help() {
                       </div>
                       <p className="text-slate-600 mb-3">Cases process automatically every Wednesday at midnight</p>
                       <ul className="text-sm space-y-1">
-                        <li>• No cost</li>
+                        <li>• No cost - default for all cases</li>
                         <li>• Results Thursday morning</li>
                         <li>• Same quality analysis</li>
                         <li>• Batch processing with other cases</li>
@@ -288,12 +295,12 @@ export default function Help() {
                     <div className="border rounded-lg p-4 bg-amber-50 border-amber-200">
                       <div className="flex items-center space-x-2 mb-3">
                         <Zap className="w-5 h-5 text-amber-600" />
-                        <h4 className="font-semibold">Instant Processing</h4>
+                        <h4 className="font-semibold">Instant Processing Upgrade</h4>
                       </div>
-                      <p className="text-slate-600 mb-3">$995 per trace for immediate investigation</p>
+                      <p className="text-slate-600 mb-3">$995 per trace upgrade for urgent cases</p>
                       <ul className="text-sm space-y-1">
                         <li>• Results in 1-2 hours</li>
-                        <li>• Priority investigation</li>
+                        <li>• Priority investigation queue</li>
                         <li>• Same comprehensive analysis</li>
                         <li>• Individual case processing</li>
                       </ul>

@@ -163,7 +163,8 @@ The application is designed for law enforcement use with security, audit trails,
 **Workflow Clarification:**
 - Officers input case details, wallet addresses, and incident information
 - CryptoTrace system automatically performs blockchain analysis and investigation
-- Victims receive notification and choose between free weekly or instant premium processing
+- Victims can only upgrade existing cases to instant processing ($995) - cannot submit new cases
+- All cases default to free weekly processing (Wednesday midnight) unless upgraded
 - No manual investigation by officers - all cryptocurrency tracing is automated
 
 ## Testing Credentials
