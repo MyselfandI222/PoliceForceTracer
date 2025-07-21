@@ -22,7 +22,7 @@ const traceFormSchema = z.object({
   victimName: z.string().min(1, "Victim name is required"),
   incidentDate: z.string().min(1, "Incident date is required"),
   description: z.string().min(1, "Description is required"),
-  traceType: z.enum(["free", "premium"]),
+  traceType: z.enum(["free", "premium"]).optional(),
 });
 
 type TraceFormData = z.infer<typeof traceFormSchema>;
@@ -47,7 +47,7 @@ export function TraceForm({ onSuccess, onCancel, userType = 'officer' }: TraceFo
       victimName: "",
       incidentDate: "",
       description: "",
-      traceType: "free",
+      traceType: userType === 'officer' ? undefined : "free",
     },
   });
 
@@ -61,7 +61,8 @@ export function TraceForm({ onSuccess, onCancel, userType = 'officer' }: TraceFo
         victimName: data.victimName,
         incidentDate: new Date(data.incidentDate).toISOString(),
         description: data.description,
-        isPremium,
+        isPremium: userType === 'officer' ? false : isPremium, // Officers always submit as free cases
+        submittedBy: userType,
       });
       return response.json();
     },
@@ -84,8 +85,10 @@ export function TraceForm({ onSuccess, onCancel, userType = 'officer' }: TraceFo
         }, 2000);
       } else {
         toast({
-          title: "Trace Created",
-          description: "Your trace has been queued for processing.",
+          title: userType === 'officer' ? "Case Submitted" : "Trace Created",
+          description: userType === 'officer' ? 
+            "Case has been submitted. The victim will be notified to choose processing options." :
+            "Your trace has been queued for processing.",
         });
         onSuccess?.();
       }
@@ -107,7 +110,7 @@ export function TraceForm({ onSuccess, onCancel, userType = 'officer' }: TraceFo
     <Card className="w-full">
       <CardHeader>
         <CardTitle className="text-lg font-semibold text-slate-900">
-          Start New Cryptocurrency Trace
+          {userType === 'officer' ? 'Submit Case Information' : 'Start New Cryptocurrency Trace'}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -226,89 +229,20 @@ export function TraceForm({ onSuccess, onCancel, userType = 'officer' }: TraceFo
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="traceType"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <div className="flex items-start space-x-3">
-                      <Info className="text-blue-600 mt-0.5 w-5 h-5" />
-                      <div className="w-full">
-                        <h4 className="text-sm font-medium text-blue-900 mb-3">Trace Options</h4>
-                        <FormControl>
-                          <RadioGroup
-                            onValueChange={(value) => {
-                              field.onChange(value);
-                              setIsPremiumSelected(value === "premium");
-                            }}
-                            defaultValue={field.value}
-                            className="space-y-2"
-                          >
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="free" id="free" />
-                              <Label htmlFor="free" className="text-sm text-blue-700">
-                                {userType === 'victim' ? 
-                                  'Free Weekly Trace (Processed Wednesdays 11:59 PM)' :
-                                  'Law Enforcement Trace (Processed Wednesdays 11:59 PM)'
-                                }
-                              </Label>
-                            </div>
-                            {userType === 'victim' && (
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="premium" id="premium" />
-                                <Label htmlFor="premium" className="text-sm text-blue-700">
-                                  Premium Instant Trace - $995 (Results in 1-2 hours)
-                                </Label>
-                              </div>
-                            )}
-                          </RadioGroup>
-                        </FormControl>
-                        {field.value === "free" && (
-                          <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded text-sm">
-                            <div className="flex items-center gap-2 text-green-700">
-                              <Clock className="h-4 w-4" />
-                              <span className="font-medium">Scheduled Processing</span>
-                            </div>
-                            <p className="text-green-700 mt-1">
-                              {userType === 'victim' ? 
-                                'Your trace will be automatically processed this Wednesday at 11:59 PM along with all other free traces. Results will be available Thursday morning.' :
-                                'Your trace will be automatically processed this Wednesday at 11:59 PM along with all other law enforcement traces. Results will be available Thursday morning.'
-                              }
-                            </p>
-                          </div>
-                        )}
-                        {field.value === "premium" && userType === 'victim' && (
-                          <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded text-sm">
-                            <div className="flex items-center gap-2 text-amber-700">
-                              <Zap className="h-4 w-4" />
-                              <span className="font-medium">Instant Processing</span>
-                            </div>
-                            <p className="text-amber-700 mt-1">
-                              Your trace will begin processing immediately after payment confirmation. 
-                              Results typically available within 1-2 hours.
-                            </p>
-                          </div>
-                        )}
-                        {userType === 'officer' && (
-                          <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded text-sm">
-                            <div className="flex items-center gap-2 text-blue-700">
-                              <Shield className="h-4 w-4" />
-                              <span className="font-medium">Law Enforcement Processing</span>
-                            </div>
-                            <p className="text-blue-700 mt-1">
-                              All law enforcement traces are processed through the weekly batch system. 
-                              Premium instant processing is available only to victims for urgent personal cases.
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+            {userType === 'officer' && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-start space-x-3">
+                  <Shield className="text-blue-600 mt-0.5 w-5 h-5" />
+                  <div className="w-full">
+                    <h4 className="text-sm font-medium text-blue-900 mb-2">Case Submission</h4>
+                    <p className="text-blue-700 text-sm">
+                      This case will be submitted for the victim to review. The victim can then choose their preferred processing option: 
+                      free weekly processing (Wednesdays at 11:59 PM) or premium instant processing.
+                    </p>
                   </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                </div>
+              </div>
+            )}
 
             <div className="flex justify-end space-x-4">
               <Button type="button" variant="outline" onClick={onCancel}>
@@ -319,7 +253,8 @@ export function TraceForm({ onSuccess, onCancel, userType = 'officer' }: TraceFo
                 disabled={createTraceMutation.isPending}
                 className="bg-primary hover:bg-blue-700"
               >
-                {createTraceMutation.isPending ? "Submitting..." : "Submit Trace Request"}
+                {createTraceMutation.isPending ? "Submitting..." : 
+                 userType === 'officer' ? "Submit Case Information" : "Submit Trace Request"}
               </Button>
             </div>
           </form>

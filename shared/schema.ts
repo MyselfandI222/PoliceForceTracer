@@ -23,8 +23,9 @@ export const traces = pgTable("traces", {
   victimName: text("victim_name").notNull(),
   incidentDate: timestamp("incident_date").notNull(),
   description: text("description").notNull(),
-  status: text("status").notNull().default("queued"), // "queued", "processing", "completed", "failed"
+  status: text("status").notNull().default("submitted"), // "submitted", "queued", "processing", "completed", "failed"
   isPremium: boolean("is_premium").notNull().default(false),
+  submittedBy: text("submitted_by").notNull().default("victim"), // "officer", "victim"
   paymentIntentId: text("payment_intent_id"),
   results: jsonb("results"),
   reportUrl: text("report_url"),

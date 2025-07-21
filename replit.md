@@ -150,7 +150,13 @@ The application is designed for law enforcement use with security, audit trails,
 - Added transaction history analysis, risk scoring, and flow pattern detection
 - Created detailed trace reports with risk assessment and recommendations
 - All forms auto-fill with test credentials for streamlined testing
-- **Premium traces now exclusive to victim portal** - officers only have access to weekly processing
+
+**Updated Access Model - Police vs Victim Workflow:**
+- **Police officers only submit cases** - no trace processing options
+- **Victims choose processing type** - free weekly or premium instant ($995)
+- Added 'submittedBy' field to track case origin (officer vs victim)
+- Police forms now labeled "Submit Case Information" vs "Submit Trace Request"
+- Clear UI separation between case submission and trace processing
 
 ## Testing Credentials
 
