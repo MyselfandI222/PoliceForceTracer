@@ -388,7 +388,7 @@ export default function VictimPortal() {
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-slate-900 mb-2">Expedited Investigation</h3>
                       <p className="text-slate-700 mb-4">
-                        Get priority processing for your cryptocurrency theft case. Our instant trace service provides comprehensive blockchain analysis and investigation results within 1-2 hours instead of the standard 3-7 days.
+                        Pay $995 per trace for immediate processing instead of waiting until Wednesday midnight. Each trace can be upgraded individually - you choose which cases need urgent attention.
                       </p>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div className="flex items-center space-x-2">
@@ -448,7 +448,7 @@ export default function VictimPortal() {
                             onClick={() => setShowTraceForm(true)}
                           >
                             <Zap className="w-4 h-4 mr-2" />
-                            Start Instant Trace - $995
+                            Start Instant Trace - $995 per trace
                           </Button>
                         </div>
                         <div>

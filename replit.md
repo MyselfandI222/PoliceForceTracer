@@ -153,10 +153,11 @@ The application is designed for law enforcement use with security, audit trails,
 
 **Updated Access Model - Police vs Victim Workflow:**
 - **Police officers only submit cases** - no trace processing options
-- **Victims choose processing type** - free weekly or premium instant ($995)
-- Added 'submittedBy' field to track case origin (officer vs victim)
+- **Victims choose processing type** - free weekly or instant ($995 per trace)
+- Added 'submittedBy' field to track case origin (officer vs victim)  
 - Police forms now labeled "Submit Case Information" vs "Submit Trace Request"
 - Clear UI separation between case submission and trace processing
+- **Per-trace payment model** - each crypto trace can be individually upgraded to instant processing
 
 ## Testing Credentials
 

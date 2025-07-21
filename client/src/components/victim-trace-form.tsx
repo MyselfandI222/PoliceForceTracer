@@ -266,9 +266,9 @@ export function VictimTraceForm({ onSuccess, onCancel }: VictimTraceFormProps) {
                               <div className="flex-1">
                                 <Label htmlFor="premium" className="text-sm font-medium text-amber-900 cursor-pointer flex items-center gap-2">
                                   <Zap className="h-4 w-4" />
-                                  Premium Instant Trace - $995
+                                  Instant Trace - $995 per trace
                                 </Label>
-                                <p className="text-xs text-amber-700 mt-1">Immediate processing • Results in 1-2 hours • Priority investigation</p>
+                                <p className="text-xs text-amber-700 mt-1">One-time payment • Immediate processing • Results in 1-2 hours</p>
                                 <div className="flex items-center gap-1 mt-2 text-xs text-amber-600">
                                   <CreditCard className="h-3 w-3" />
                                   <span>Secure payment required</span>
