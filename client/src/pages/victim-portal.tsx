@@ -45,7 +45,7 @@ export default function VictimPortal() {
   const victimCases = [
     {
       id: 1,
-      caseNumber: "VIC-2024-001",
+      caseNumber: "CRY-2024-78432",
       submittedDate: "2024-01-15",
       status: "completed",
       cryptoType: "Bitcoin",
@@ -60,7 +60,7 @@ export default function VictimPortal() {
     },
     {
       id: 2,
-      caseNumber: "VIC-2024-002", 
+      caseNumber: "CRY-2024-78433", 
       submittedDate: "2024-01-18",
       status: "processing",
       cryptoType: "Ethereum",
@@ -75,7 +75,7 @@ export default function VictimPortal() {
     },
     {
       id: 3,
-      caseNumber: "VIC-2024-003",
+      caseNumber: "CRY-2024-78434",
       submittedDate: "2024-01-22",
       status: "queued",
       cryptoType: "Bitcoin",
@@ -93,7 +93,7 @@ export default function VictimPortal() {
   const actionHistory = [
     {
       date: "2024-01-20",
-      action: "Case VIC-2024-001 completed",
+      action: "Case CRY-2024-78432 completed",
       officer: "Detective Johnson",
       details: "Investigation concluded, $89,500 recovered"
     },
@@ -101,19 +101,19 @@ export default function VictimPortal() {
       date: "2024-01-19",
       action: "Evidence analysis updated",
       officer: "Detective Chen", 
-      details: "Blockchain trace in progress for VIC-2024-002"
+      details: "Blockchain trace in progress for CRY-2024-78433"
     },
     {
       date: "2024-01-18",
       action: "New case submitted",
       officer: "System",
-      details: "VIC-2024-002 received and assigned"
+      details: "CRY-2024-78433 received and assigned"
     },
     {
       date: "2024-01-17",
       action: "Report generated",
       officer: "Detective Johnson",
-      details: "Final report for VIC-2024-001 prepared"
+      details: "Final report for CRY-2024-78432 prepared"
     }
   ];
 

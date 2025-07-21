@@ -32,8 +32,8 @@ export default function LoginVictim() {
     setTimeout(() => {
       setIsLoading(false);
       
-      // Mock successful login - accept standard test credentials
-      if ((formData.email === 'test@test.com' && formData.password === 'password') || 
+      // Mock successful login - accept standard test credentials or specific case number
+      if ((formData.email === 'test@test.com' && formData.password === 'password' && formData.caseNumber === 'CRY-2024-78432') || 
           (formData.caseNumber && formData.email && formData.password)) {
         localStorage.setItem('userType', 'victim');
         localStorage.setItem('token', 'victim-mock-token');
@@ -90,7 +90,7 @@ export default function LoginVictim() {
                 <Input
                   id="caseNumber"
                   name="caseNumber"
-                  placeholder="VIC-2024-001"
+                  placeholder="CRY-2024-78432"
                   value={formData.caseNumber}
                   onChange={handleInputChange}
                   required
@@ -147,7 +147,7 @@ export default function LoginVictim() {
               <div className="text-sm text-slate-600">
                 <p>Demo Credentials:</p>
                 <p className="font-mono text-xs bg-slate-100 p-2 rounded mt-1">
-                  Case: VIC-2024-001<br />
+                  Case: CRY-2024-78432<br />
                   Email: test@test.com<br />
                   Password: password
                 </p>
