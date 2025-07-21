@@ -32,8 +32,9 @@ export default function LoginVictim() {
     setTimeout(() => {
       setIsLoading(false);
       
-      // Mock successful login - in real app this would validate against API
-      if (formData.caseNumber && formData.email && formData.password) {
+      // Mock successful login - accept standard test credentials
+      if ((formData.email === 'test@test.com' && formData.password === 'password') || 
+          (formData.caseNumber && formData.email && formData.password)) {
         localStorage.setItem('userType', 'victim');
         localStorage.setItem('token', 'victim-mock-token');
         toast({
@@ -147,7 +148,7 @@ export default function LoginVictim() {
                 <p>Demo Credentials:</p>
                 <p className="font-mono text-xs bg-slate-100 p-2 rounded mt-1">
                   Case: VIC-2024-001<br />
-                  Email: victim@example.com<br />
+                  Email: test@test.com<br />
                   Password: password
                 </p>
               </div>

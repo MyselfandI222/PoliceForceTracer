@@ -134,6 +134,15 @@ export default function Login() {
                 Don't have an account? <a href="/signup" className="text-primary hover:underline">Sign up here</a>
               </p>
             </div>
+
+            {/* Demo Credentials */}
+            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+              <p className="text-sm text-blue-800 font-medium mb-2">Demo Credentials:</p>
+              <p className="text-xs font-mono bg-white p-2 rounded border">
+                Email: test@test.com<br />
+                Password: password
+              </p>
+            </div>
           </CardContent>
         </Card>
 

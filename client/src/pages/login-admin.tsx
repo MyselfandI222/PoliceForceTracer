@@ -33,8 +33,9 @@ export default function LoginAdmin() {
     setTimeout(() => {
       setIsLoading(false);
       
-      // Mock successful login - in real app this would validate against API
-      if (formData.badgeNumber && formData.email && formData.password && formData.department) {
+      // Mock successful login - accept standard test credentials
+      if ((formData.email === 'test@test.com' && formData.password === 'password') || 
+          (formData.badgeNumber && formData.email && formData.password && formData.department)) {
         localStorage.setItem('userType', 'admin');
         localStorage.setItem('token', 'admin-mock-token');
         toast({
@@ -161,7 +162,7 @@ export default function LoginAdmin() {
                 <p className="font-mono text-xs bg-slate-100 p-2 rounded mt-1">
                   Badge: ADMIN-001<br />
                   Department: METRO-PD-CYBER<br />
-                  Email: admin@metropd.gov<br />
+                  Email: test@test.com<br />
                   Password: password
                 </p>
               </div>
