@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { QuickExportButton } from "@/components/quick-export-button";
 
 import { 
   Shield, 
@@ -313,14 +314,21 @@ export default function VictimPortal() {
                             View Details
                           </Button>
                           {case_.status === 'completed' && (
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              onClick={() => handleDownloadReport(case_.id)}
-                            >
-                              <Download className="w-4 h-4 mr-2" />
-                              Download Report
-                            </Button>
+                            <div className="flex space-x-2">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => handleDownloadReport(case_.id)}
+                              >
+                                <Eye className="w-4 h-4 mr-2" />
+                                View Report
+                              </Button>
+                              <QuickExportButton 
+                                traceId={case_.id.toString()}
+                                caseNumber={case_.caseNumber}
+                                size="sm"
+                              />
+                            </div>
                           )}
                           {(case_.status === 'queued' || case_.status === 'processing') && (
                             <Button 

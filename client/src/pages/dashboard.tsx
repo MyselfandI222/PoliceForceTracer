@@ -6,6 +6,7 @@ import { TraceForm } from "@/components/trace-form";
 import { TraceReport } from "@/components/trace-report";
 import { TraceStatus } from "@/components/trace-status";
 import { PremiumModal } from "@/components/premium-modal";
+import { QuickExportButton } from "@/components/quick-export-button";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,7 +23,8 @@ import {
   Clock,
   FileText,
   Bell,
-  Shield
+  Shield,
+  Download
 } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
@@ -345,14 +347,21 @@ export default function Dashboard() {
                             estimatedCompletion={trace.estimatedCompletion ? new Date(trace.estimatedCompletion) : undefined}
                           />
                           {trace.status === 'completed' && (
-                            <Button 
-                              size="sm" 
-                              onClick={() => generateReport(trace.id)}
-                              className="bg-blue-600 hover:bg-blue-700"
-                            >
-                              <FileText className="h-4 w-4 mr-1" />
-                              View Report
-                            </Button>
+                            <div className="flex space-x-2">
+                              <Button 
+                                size="sm" 
+                                onClick={() => generateReport(trace.id)}
+                                className="bg-blue-600 hover:bg-blue-700"
+                              >
+                                <FileText className="h-4 w-4 mr-1" />
+                                View Report
+                              </Button>
+                              <QuickExportButton 
+                                traceId={trace.id.toString()}
+                                caseNumber={trace.caseNumber}
+                                size="sm"
+                              />
+                            </div>
                           )}
                         </div>
                       </div>

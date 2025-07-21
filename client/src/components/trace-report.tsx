@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
+import { ExportDialog } from "@/components/export-dialog";
 import { 
   AlertTriangle, 
   Shield, 
@@ -15,7 +16,9 @@ import {
   FileText,
   Download,
   Eye,
-  AlertCircle
+  AlertCircle,
+  Printer,
+  Share
 } from "lucide-react";
 
 interface Transaction {
@@ -109,9 +112,19 @@ export function TraceReport({ report, onClose }: TraceReportProps) {
           <p className="text-sm text-slate-500">Report ID: {report.reportId}</p>
         </div>
         <div className="flex items-center gap-2">
+          <ExportDialog report={report} caseNumber="CRY-2024-78432">
+            <Button variant="outline" size="sm">
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+          </ExportDialog>
           <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            Export PDF
+            <Printer className="h-4 w-4 mr-2" />
+            Print
+          </Button>
+          <Button variant="outline" size="sm">
+            <Share className="h-4 w-4 mr-2" />
+            Share
           </Button>
           {onClose && (
             <Button variant="outline" size="sm" onClick={onClose}>
