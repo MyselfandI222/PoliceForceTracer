@@ -152,12 +152,19 @@ The application is designed for law enforcement use with security, audit trails,
 - All forms auto-fill with test credentials for streamlined testing
 
 **Updated Access Model - Police vs Victim Workflow:**
-- **Police officers only submit cases** - no trace processing options
-- **Victims choose processing type** - free weekly or instant ($995 per trace)
+- **Police officers only input case information** - they don't investigate or solve anything
+- **System performs automated cryptocurrency investigation** - officers are data entry only
+- **Victims choose processing type** - free weekly (Wednesday midnight) or instant premium ($995 per trace)
 - Added 'submittedBy' field to track case origin (officer vs victim)  
 - Police forms now labeled "Submit Case Information" vs "Submit Trace Request"
-- Clear UI separation between case submission and trace processing
+- Clear UI separation between case submission and automated trace processing
 - **Per-trace payment model** - each crypto trace can be individually upgraded to instant processing
+
+**Workflow Clarification:**
+- Officers input case details, wallet addresses, and incident information
+- CryptoTrace system automatically performs blockchain analysis and investigation
+- Victims receive notification and choose between free weekly or instant premium processing
+- No manual investigation by officers - all cryptocurrency tracing is automated
 
 ## Testing Credentials
 

@@ -21,7 +21,8 @@ import {
   Bitcoin,
   Clock,
   FileText,
-  Bell
+  Bell,
+  Shield
 } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
