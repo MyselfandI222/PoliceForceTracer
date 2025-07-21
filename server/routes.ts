@@ -1,8 +1,10 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { cryptoTracker } from "./crypto-tracker";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { z } from "zod";
 import { 
   loginSchema, 
   signupSchema, 
@@ -404,6 +406,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     } catch (error) {
       res.status(500).json({ message: "Error fetching admin data" });
+    }
+  });
+
+  // Generate trace report
+  app.post("/api/traces/:id/generate-report", authenticateToken, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const trace = await storage.getTrace(id);
+      
+      if (!trace) {
+        return res.status(404).json({ message: "Trace not found" });
+      }
+
+      // Start the blockchain analysis
+      await storage.updateTrace(id, { status: "processing" });
+      
+      // Generate the analysis report
+      const report = await cryptoTracker.traceAddress(
+        trace.walletAddress,
+        trace.cryptoType
+      );
+
+      // Update trace with completed status
+      await storage.updateTrace(id, { status: "completed" });
+
+      res.json({
+        message: "Report generated successfully",
+        report,
+        traceId: id
+      });
+    } catch (error) {
+      console.error("Error generating report:", error);
+      res.status(500).json({ message: "Failed to generate report" });
     }
   });
 

@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { Layout } from "@/components/layout";
 import { TraceForm } from "@/components/trace-form";
+import { TraceReport } from "@/components/trace-report";
 import { PremiumModal } from "@/components/premium-modal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,6 +27,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function Dashboard() {
   const [showTraceForm, setShowTraceForm] = useState(false);
+  const [selectedReport, setSelectedReport] = useState(null);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [, setLocation] = useLocation();
   const { toast } = useToast();
@@ -66,6 +68,35 @@ export default function Dashboard() {
     });
   };
 
+  const generateReport = async (traceId: number) => {
+    try {
+      const response = await fetch(`/api/traces/${traceId}/generate-report`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setSelectedReport(data.report);
+        toast({
+          title: "Report Generated",
+          description: "Cryptocurrency trace analysis completed successfully.",
+        });
+      } else {
+        throw new Error('Failed to generate report');
+      }
+    } catch (error) {
+      toast({
+        title: "Report Generation Failed",
+        description: "Unable to generate trace report. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed': return 'bg-green-100 text-green-800';
@@ -84,6 +115,19 @@ export default function Dashboard() {
       default: return 0;
     }
   };
+
+  if (selectedReport) {
+    return (
+      <Layout>
+        <div className="p-6">
+          <TraceReport 
+            report={selectedReport}
+            onClose={() => setSelectedReport(null)}
+          />
+        </div>
+      </Layout>
+    );
+  }
 
   if (showTraceForm) {
     return (
@@ -297,26 +341,30 @@ export default function Dashboard() {
                             {trace.status === 'queued' && 'Queued'}
                             {trace.status === 'failed' && 'Failed'}
                           </Badge>
-                          {trace.status !== 'completed' && (
-                            <div className="w-24 h-2 bg-slate-200 rounded-full">
-                              <div 
-                                className="h-2 bg-gradient-to-r from-blue-600 to-blue-800 rounded-full transition-all duration-300"
-                                style={{ width: `${getProgressValue(trace.status)}%` }}
-                              ></div>
-                            </div>
-                          )}
-                          {trace.status === 'completed' && (
-                            <Button variant="ghost" size="sm">
-                              <FileText className="w-4 h-4 mr-1" />
-                              View Report
-                            </Button>
-                          )}
-                          {trace.status === 'queued' && (
-                            <div className="flex items-center text-sm text-slate-500">
-                              <Clock className="w-4 h-4 mr-1" />
-                              Est. 2 days
-                            </div>
-                          )}
+                          <div className="flex items-center gap-2">
+                            {trace.status === 'completed' ? (
+                              <Button 
+                                size="sm" 
+                                onClick={() => generateReport(trace.id)}
+                                className="bg-blue-600 hover:bg-blue-700"
+                              >
+                                <FileText className="h-4 w-4 mr-1" />
+                                View Report
+                              </Button>
+                            ) : trace.status === 'queued' ? (
+                              <div className="flex items-center text-sm text-slate-500">
+                                <Clock className="w-4 h-4 mr-1" />
+                                Est. 2 days
+                              </div>
+                            ) : (
+                              <div className="w-24 h-2 bg-slate-200 rounded-full">
+                                <div 
+                                  className="h-2 bg-gradient-to-r from-blue-600 to-blue-800 rounded-full transition-all duration-300"
+                                  style={{ width: `${getProgressValue(trace.status)}%` }}
+                                ></div>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     ))
