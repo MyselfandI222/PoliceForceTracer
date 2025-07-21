@@ -13,9 +13,9 @@ export default function LoginVictim() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    caseNumber: "",
-    email: "",
-    password: ""
+    caseNumber: "CRY-2024-78432",
+    email: "test@test.com",
+    password: "password"
   });
   const { toast } = useToast();
 

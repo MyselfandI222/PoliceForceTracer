@@ -7,6 +7,7 @@ CryptoTrace is a full-stack web application designed for law enforcement agencie
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+Auto-fill test credentials for streamlined testing workflow.
 
 ## System Architecture
 
@@ -139,3 +140,28 @@ JWT-based authentication with role-based access control (officer, admin, super_a
 - Push-based deployment with `drizzle-kit push`
 
 The application is designed for law enforcement use with security, audit trails, and proper user management as primary concerns. The architecture supports both development efficiency and production reliability while maintaining the specialized requirements of cryptocurrency investigation workflows.
+
+## Testing Credentials
+
+**Administrator Portal:**
+- Badge: ADMIN-4987
+- Department: METRO-CYBER-01
+- Email: test@test.com
+- Password: password
+
+**Officer Portal:**
+- Email: test@test.com
+- Password: password
+
+**Victim Portal:**
+- Case Number: CRY-2024-78432
+- Email: test@test.com
+- Password: password
+
+**Test Cryptocurrency Addresses:**
+- Bitcoin (Satoshi Genesis): 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+- Bitcoin (BitFinex Hack): 1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2
+- Ethereum (Foundation): 0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae
+- Ethereum (Binance): 0x3f5ce5fbfe3e9af3971dd833d26ba9b5c936f0be
+
+All forms now auto-fill with test credentials to streamline the testing workflow.

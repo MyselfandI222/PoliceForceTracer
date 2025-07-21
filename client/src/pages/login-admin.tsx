@@ -13,10 +13,10 @@ export default function LoginAdmin() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    badgeNumber: "",
-    email: "",
-    password: "",
-    department: ""
+    badgeNumber: "ADMIN-4987",
+    email: "test@test.com",
+    password: "password",
+    department: "METRO-CYBER-01"
   });
   const { toast } = useToast();
 
@@ -91,7 +91,7 @@ export default function LoginAdmin() {
                 <Input
                   id="badgeNumber"
                   name="badgeNumber"
-                  placeholder="ADMIN-001"
+                  placeholder="ADMIN-4987"
                   value={formData.badgeNumber}
                   onChange={handleInputChange}
                   required
@@ -103,7 +103,7 @@ export default function LoginAdmin() {
                 <Input
                   id="department"
                   name="department"
-                  placeholder="METRO-PD-CYBER"
+                  placeholder="METRO-CYBER-01"
                   value={formData.department}
                   onChange={handleInputChange}
                   required
@@ -116,7 +116,7 @@ export default function LoginAdmin() {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="admin@metropd.gov"
+                  placeholder="test@test.com"
                   value={formData.email}
                   onChange={handleInputChange}
                   required
@@ -160,8 +160,8 @@ export default function LoginAdmin() {
               <div className="text-sm text-slate-600">
                 <p>Demo Credentials:</p>
                 <p className="font-mono text-xs bg-slate-100 p-2 rounded mt-1">
-                  Badge: ADMIN-001<br />
-                  Department: METRO-PD-CYBER<br />
+                  Badge: ADMIN-4987<br />
+                  Department: METRO-CYBER-01<br />
                   Email: test@test.com<br />
                   Password: password
                 </p>
