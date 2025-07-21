@@ -24,7 +24,10 @@ import {
   CreditCard,
   Activity,
   TrendingUp,
-  BarChart3
+  BarChart3,
+  Zap,
+  Star,
+  Timer
 } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
@@ -153,6 +156,20 @@ export default function VictimPortal() {
     setSelectedTrace(trace);
   };
 
+  const handleUpgradeCase = () => {
+    toast({
+      title: "Upgrade Initiated",
+      description: "Redirecting to secure payment processing...",
+    });
+    // In a real app, this would redirect to Stripe payment or similar
+    setTimeout(() => {
+      toast({
+        title: "Payment Processing",
+        description: "Please complete payment to upgrade your case to instant trace.",
+      });
+    }, 1500);
+  };
+
   const totalStolen = victimCases.reduce((sum, c) => sum + parseFloat(c.stolenAmount.replace('$', '').replace(',', '')), 0);
   const totalRecovered = victimCases.reduce((sum, c) => sum + parseFloat(c.recoveredAmount.replace('$', '').replace(',', '')), 0);
   const recoveryRate = totalStolen > 0 ? Math.round((totalRecovered / totalStolen) * 100) : 0;
@@ -241,6 +258,7 @@ export default function VictimPortal() {
         <Tabs defaultValue="cases" className="space-y-6">
           <TabsList>
             <TabsTrigger value="cases">My Cases</TabsTrigger>
+            <TabsTrigger value="instant">Instant Trace</TabsTrigger>
             <TabsTrigger value="history">Action History</TabsTrigger>
             <TabsTrigger value="contact">Contact Information</TabsTrigger>
           </TabsList>
@@ -327,6 +345,152 @@ export default function VictimPortal() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="instant" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center space-x-2">
+                    <Zap className="w-5 h-5 text-yellow-600" />
+                    <span>Instant Trace Service</span>
+                  </CardTitle>
+                  <Badge className="bg-yellow-100 text-yellow-800">
+                    <Star className="w-3 h-3 mr-1" />
+                    Premium
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-lg border border-yellow-200">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center">
+                      <Timer className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-slate-900 mb-2">Expedited Investigation</h3>
+                      <p className="text-slate-700 mb-4">
+                        Get priority processing for your cryptocurrency theft case. Our instant trace service provides comprehensive blockchain analysis and investigation results within 1-2 hours instead of the standard 3-7 days.
+                      </p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                          <span className="text-sm">1-2 hour processing time</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                          <span className="text-sm">Advanced blockchain analysis</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                          <span className="text-sm">Real-time status updates</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                          <span className="text-sm">Priority investigator assignment</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                          <span className="text-sm">Detailed recovery analysis</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                          <span className="text-sm">Cross-chain transaction tracking</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Card className="border-2 border-slate-200">
+                    <CardContent className="p-6">
+                      <div className="text-center space-y-4">
+                        <Clock className="w-8 h-8 text-slate-600 mx-auto" />
+                        <div>
+                          <h4 className="font-semibold text-slate-900">Standard Processing</h4>
+                          <p className="text-sm text-slate-600">Current service level</p>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="text-2xl font-bold text-slate-900">FREE</div>
+                          <div className="text-sm text-slate-600">3-7 business days</div>
+                          <div className="text-xs text-slate-500">Queue-based processing</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-2 border-yellow-300 bg-gradient-to-br from-yellow-50 to-orange-50">
+                    <CardContent className="p-6">
+                      <div className="text-center space-y-4">
+                        <Zap className="w-8 h-8 text-yellow-600 mx-auto" />
+                        <div>
+                          <h4 className="font-semibold text-slate-900">Instant Trace</h4>
+                          <p className="text-sm text-slate-600">Priority processing</p>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="text-2xl font-bold text-yellow-600">$995</div>
+                          <div className="text-sm text-slate-600">1-2 hours</div>
+                          <div className="text-xs text-slate-500">Priority queue</div>
+                        </div>
+                        <Button 
+                          className="w-full bg-yellow-600 hover:bg-yellow-700 text-white"
+                          onClick={handleUpgradeCase}
+                        >
+                          <CreditCard className="w-4 h-4 mr-2" />
+                          Upgrade Case
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                  <h4 className="font-semibold text-blue-900 mb-3">Why Choose Instant Trace?</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-800">
+                    <div className="space-y-2">
+                      <div className="flex items-start space-x-2">
+                        <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2"></div>
+                        <span><strong>Time-Critical Cases:</strong> When immediate action could prevent further losses or help recovery efforts</span>
+                      </div>
+                      <div className="flex items-start space-x-2">
+                        <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2"></div>
+                        <span><strong>Higher Recovery Potential:</strong> Faster analysis means better chance of asset recovery</span>
+                      </div>
+                      <div className="flex items-start space-x-2">
+                        <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2"></div>
+                        <span><strong>Peace of Mind:</strong> Quick resolution reduces stress and uncertainty</span>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-start space-x-2">
+                        <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2"></div>
+                        <span><strong>Legal Proceedings:</strong> Urgent evidence needed for court cases or insurance claims</span>
+                      </div>
+                      <div className="flex items-start space-x-2">
+                        <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2"></div>
+                        <span><strong>Business Cases:</strong> Corporate theft requiring immediate investigation</span>
+                      </div>
+                      <div className="flex items-start space-x-2">
+                        <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2"></div>
+                        <span><strong>Large Amounts:</strong> High-value cases where speed is crucial</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border rounded-lg p-4 bg-slate-50">
+                  <div className="flex items-center space-x-2 mb-3">
+                    <Shield className="w-4 h-4 text-slate-600" />
+                    <span className="font-medium text-slate-900">Service Guarantee</span>
+                  </div>
+                  <p className="text-sm text-slate-600">
+                    If we cannot deliver your instant trace results within 2 hours, you will receive a full refund. 
+                    Our premium service maintains a 99.2% on-time delivery rate with the same investigative quality as standard traces.
+                  </p>
                 </div>
               </CardContent>
             </Card>
