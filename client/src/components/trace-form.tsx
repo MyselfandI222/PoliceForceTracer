@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { AlertCircle, Info } from "lucide-react";
+import { AlertCircle, Info, Clock, Zap } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
@@ -247,7 +247,7 @@ export function TraceForm({ onSuccess, onCancel }: TraceFormProps) {
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="free" id="free" />
                               <Label htmlFor="free" className="text-sm text-blue-700">
-                                Free Weekly Trace (Results in 3-7 days)
+                                Free Daily Trace (Processed at 11:59 PM)
                               </Label>
                             </div>
                             <div className="flex items-center space-x-2">
@@ -258,6 +258,30 @@ export function TraceForm({ onSuccess, onCancel }: TraceFormProps) {
                             </div>
                           </RadioGroup>
                         </FormControl>
+                        {field.value === "free" && (
+                          <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded text-sm">
+                            <div className="flex items-center gap-2 text-green-700">
+                              <Clock className="h-4 w-4" />
+                              <span className="font-medium">Scheduled Processing</span>
+                            </div>
+                            <p className="text-green-700 mt-1">
+                              Your trace will be automatically processed tonight at 11:59 PM along with all other free traces. 
+                              Results will be available tomorrow morning.
+                            </p>
+                          </div>
+                        )}
+                        {field.value === "premium" && (
+                          <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded text-sm">
+                            <div className="flex items-center gap-2 text-amber-700">
+                              <Zap className="h-4 w-4" />
+                              <span className="font-medium">Instant Processing</span>
+                            </div>
+                            <p className="text-amber-700 mt-1">
+                              Your trace will begin processing immediately after payment confirmation. 
+                              Results typically available within 1-2 hours.
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

@@ -141,6 +141,16 @@ JWT-based authentication with role-based access control (officer, admin, super_a
 
 The application is designed for law enforcement use with security, audit trails, and proper user management as primary concerns. The architecture supports both development efficiency and production reliability while maintaining the specialized requirements of cryptocurrency investigation workflows.
 
+## Recent Changes (July 21, 2025)
+
+**Implemented Scheduled Trace Processing System:**
+- Free traces now process automatically at 11:59 PM daily (batch processing)
+- Premium traces ($995) process immediately for 1-2 hour completion  
+- Built comprehensive cryptocurrency tracking system with realistic blockchain analysis
+- Added transaction history analysis, risk scoring, and flow pattern detection
+- Created detailed trace reports with risk assessment and recommendations
+- All forms auto-fill with test credentials for streamlined testing
+
 ## Testing Credentials
 
 **Administrator Portal:**

@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { cryptoTracker } from "./crypto-tracker";
+import { traceScheduler } from "./trace-scheduler";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { z } from "zod";
@@ -274,9 +275,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ...req.body,
         userId: req.user.id,
         status: req.body.isPremium ? "pending_payment" : "queued",
-        estimatedCompletion: req.body.isPremium 
-          ? new Date(Date.now() + 2 * 60 * 60 * 1000) // 2 hours for premium
-          : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days for free
+        estimatedCompletion: traceScheduler.getEstimatedCompletion(req.body.isPremium)
       });
 
       const trace = await storage.createTrace(traceData);
@@ -409,7 +408,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Generate trace report
+  // Generate trace report (for premium traces or manual processing)
   app.post("/api/traces/:id/generate-report", authenticateToken, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
@@ -419,17 +418,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Trace not found" });
       }
 
-      // Start the blockchain analysis
-      await storage.updateTrace(id, { status: "processing" });
+      let report;
       
-      // Generate the analysis report
-      const report = await cryptoTracker.traceAddress(
-        trace.walletAddress,
-        trace.cryptoType
-      );
-
-      // Update trace with completed status
-      await storage.updateTrace(id, { status: "completed" });
+      if (trace.isPremium) {
+        // Process premium trace immediately
+        report = await traceScheduler.processPremiumTrace(id);
+      } else {
+        // For free traces, only allow if admin or already completed
+        if (req.user.role !== 'admin' && req.user.role !== 'super_admin' && trace.status !== 'completed') {
+          return res.status(403).json({ 
+            message: "Free traces are processed automatically at 11:59 PM daily. Please wait for scheduled processing.",
+            nextProcessingTime: traceScheduler.getNextProcessingTime()
+          });
+        }
+        
+        // Generate report for completed free trace or admin override
+        await storage.updateTrace(id, { status: "processing" });
+        report = await cryptoTracker.traceAddress(trace.walletAddress, trace.cryptoType);
+        await storage.updateTrace(id, { status: "completed" });
+      }
 
       res.json({
         message: "Report generated successfully",

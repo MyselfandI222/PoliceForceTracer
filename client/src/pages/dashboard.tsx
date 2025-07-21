@@ -4,6 +4,7 @@ import { useLocation } from "wouter";
 import { Layout } from "@/components/layout";
 import { TraceForm } from "@/components/trace-form";
 import { TraceReport } from "@/components/trace-report";
+import { TraceStatus } from "@/components/trace-status";
 import { PremiumModal } from "@/components/premium-modal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -283,22 +284,34 @@ export default function Dashboard() {
             <Card className="mt-6 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-2">Current Plan</h3>
-                <p className="text-blue-100 mb-4">Free Tier - Weekly Traces</p>
+                <p className="text-blue-100 mb-4">Free Tier - Daily Processing</p>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span>Traces this week:</span>
-                    <span>3/5</span>
+                    <span>Processing Time:</span>
+                    <span>11:59 PM Daily</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Next reset:</span>
-                    <span>2 days</span>
+                    <span>Next Processing:</span>
+                    <span>Today 11:59 PM</span>
                   </div>
+                  <div className="flex justify-between">
+                    <span>Queue Status:</span>
+                    <span>On Schedule</span>
+                  </div>
+                </div>
+                <div className="mt-4 p-3 bg-blue-700 rounded-lg text-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Clock className="h-4 w-4" />
+                    <span className="font-medium">Scheduled Processing</span>
+                  </div>
+                  <p className="text-blue-100">All free traces process automatically at 11:59 PM daily</p>
                 </div>
                 <Button 
                   className="w-full bg-white text-blue-600 hover:bg-blue-50 mt-4"
                   onClick={handlePremiumTrace}
                 >
-                  View Premium Services
+                  <Zap className="h-4 w-4 mr-2" />
+                  Upgrade to Instant Processing
                 </Button>
               </CardContent>
             </Card>
@@ -334,37 +347,22 @@ export default function Dashboard() {
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center space-x-4">
-                          <Badge className={getStatusColor(trace.status)}>
-                            {trace.status === 'processing' && 'In Progress'}
-                            {trace.status === 'completed' && 'Completed'}
-                            {trace.status === 'queued' && 'Queued'}
-                            {trace.status === 'failed' && 'Failed'}
-                          </Badge>
-                          <div className="flex items-center gap-2">
-                            {trace.status === 'completed' ? (
-                              <Button 
-                                size="sm" 
-                                onClick={() => generateReport(trace.id)}
-                                className="bg-blue-600 hover:bg-blue-700"
-                              >
-                                <FileText className="h-4 w-4 mr-1" />
-                                View Report
-                              </Button>
-                            ) : trace.status === 'queued' ? (
-                              <div className="flex items-center text-sm text-slate-500">
-                                <Clock className="w-4 h-4 mr-1" />
-                                Est. 2 days
-                              </div>
-                            ) : (
-                              <div className="w-24 h-2 bg-slate-200 rounded-full">
-                                <div 
-                                  className="h-2 bg-gradient-to-r from-blue-600 to-blue-800 rounded-full transition-all duration-300"
-                                  style={{ width: `${getProgressValue(trace.status)}%` }}
-                                ></div>
-                              </div>
-                            )}
-                          </div>
+                        <div className="flex items-center justify-between">
+                          <TraceStatus 
+                            status={trace.status}
+                            isPremium={trace.isPremium}
+                            estimatedCompletion={trace.estimatedCompletion ? new Date(trace.estimatedCompletion) : undefined}
+                          />
+                          {trace.status === 'completed' && (
+                            <Button 
+                              size="sm" 
+                              onClick={() => generateReport(trace.id)}
+                              className="bg-blue-600 hover:bg-blue-700"
+                            >
+                              <FileText className="h-4 w-4 mr-1" />
+                              View Report
+                            </Button>
+                          )}
                         </div>
                       </div>
                     ))
