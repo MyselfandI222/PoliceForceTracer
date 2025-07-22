@@ -16,6 +16,8 @@ import Settings from "@/pages/settings";
 import Help from "@/pages/help";
 import VictimPortal from "@/pages/victim-portal";
 import PoliceAdmin from "@/pages/police-admin";
+import { lazy } from "react";
+const DemoInvestigation = lazy(() => import("@/pages/demo-investigation"));
 import NotFound from "@/pages/not-found";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -75,6 +77,7 @@ function Router() {
           <Help />
         </ProtectedRoute>
       </Route>
+      <Route path="/demo" component={DemoInvestigation} />
       
       {/* Victim Routes */}
       <Route path="/victim-portal">

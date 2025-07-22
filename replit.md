@@ -141,24 +141,30 @@ JWT-based authentication with role-based access control (officer, admin, super_a
 
 The application is designed for law enforcement use with security, audit trails, and proper user management as primary concerns. The architecture supports both development efficiency and production reliability while maintaining the specialized requirements of cryptocurrency investigation workflows.
 
-## Recent Changes (July 21, 2025)
+## Recent Changes (July 22, 2025)
 
-**Implemented Scheduled Trace Processing System:**
-- Free traces now process automatically on Wednesdays at 11:59 PM (weekly batch processing)
-- Premium traces ($995) process immediately for 1-2 hour completion  
-- Built comprehensive cryptocurrency tracking system with realistic blockchain analysis
-- Added transaction history analysis, risk scoring, and flow pattern detection
-- Created detailed trace reports with risk assessment and recommendations
-- All forms auto-fill with test credentials for streamlined testing
+**Implemented Comprehensive Export System:**
+- Added ExportDialog component with customizable format options (PDF, CSV, JSON, TXT, Excel)
+- Created QuickExportButton for instant exports with dropdown format selection
+- Added export functionality to both officer dashboard and victim portal
+- Export options include section filtering, chart inclusion, and date format preferences
+- Supports multiple formats: PDF reports, CSV transaction data, JSON raw data, text summaries
+- Automatic file naming with case numbers, report IDs, and timestamps
 
-**Updated Access Model - Police vs Victim Workflow:**
-- **Police officers only input case information** - they don't investigate or solve anything
-- **System performs automated cryptocurrency investigation** - officers are data entry only
-- **Victims choose processing type** - free weekly (Wednesday midnight) or instant premium ($995 per trace)
-- Added 'submittedBy' field to track case origin (officer vs victim)  
-- Police forms now labeled "Submit Case Information" vs "Submit Trace Request"
-- Clear UI separation between case submission and automated trace processing
-- **Per-trace payment model** - each crypto trace can be individually upgraded to instant processing
+**Built Complete Demo Investigation System:**
+- Created DemoWalletSelector with 6 real cryptocurrency addresses (Genesis, Bitfinex hack, Binance, etc.)
+- Added TraceExecutionViewer showing live blockchain analysis with real-time progress
+- Implemented FreezeRequestManager for complete asset freeze workflow
+- Built full police-to-exchange communication system with legal documentation
+- Added live location discovery, exchange detection, and compliance coordination
+- Created complete trace-to-freeze workflow demonstration
+
+**Demo Investigation Features:**
+- Real wallet selection: Genesis block, exchange hacks, legitimate addresses
+- Live trace execution: Blockchain scanning, clustering, location discovery
+- Asset freeze workflow: Legal request generation, exchange coordination, status tracking
+- Complete documentation: Investigation reports, freeze requests, legal templates
+- Multi-phase workflow: Selection → Tracing → Freeze with progress indicators
 
 **Workflow Clarification:**
 - Officers input case details, wallet addresses, and incident information
@@ -166,6 +172,7 @@ The application is designed for law enforcement use with security, audit trails,
 - Victims can only upgrade existing cases to instant processing ($995) - cannot submit new cases
 - All cases default to free weekly processing (Wednesday midnight) unless upgraded
 - No manual investigation by officers - all cryptocurrency tracing is automated
+- Demo system showcases complete investigation workflow from selection to asset freeze
 
 ## Testing Credentials
 
