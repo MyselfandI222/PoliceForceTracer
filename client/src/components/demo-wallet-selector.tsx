@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, startTransition } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -149,11 +149,13 @@ export function DemoWalletSelector({ onWalletSelect, onStartTrace }: DemoWalletS
   const handleWalletSelection = (walletAddress: string) => {
     const wallet = KNOWN_WALLETS.find(w => w.address === walletAddress);
     if (wallet) {
-      setSelectedWallet(wallet);
-      onWalletSelect(wallet);
-      // Generate auto case number
-      const autoCase = `CRY-DEMO-${Math.floor(Math.random() * 9999).toString().padStart(4, '0')}`;
-      setCaseNumber(autoCase);
+      startTransition(() => {
+        setSelectedWallet(wallet);
+        onWalletSelect(wallet);
+        // Generate auto case number
+        const autoCase = `CRY-DEMO-${Math.floor(Math.random() * 9999).toString().padStart(4, '0')}`;
+        setCaseNumber(autoCase);
+      });
     }
   };
 

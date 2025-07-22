@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { isAuthenticated } from "@/lib/auth";
+import { Suspense } from "react";
 import LoginSelector from "@/pages/login-selector";
 import Login from "@/pages/login";
 import LoginVictim from "@/pages/login-victim";
@@ -77,7 +78,13 @@ function Router() {
           <Help />
         </ProtectedRoute>
       </Route>
-      <Route path="/demo" component={DemoInvestigation} />
+      <Route path="/demo">
+        <Suspense fallback={<div className="flex items-center justify-center h-screen">
+          <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+        </div>}>
+          <DemoInvestigation />
+        </Suspense>
+      </Route>
       
       {/* Victim Routes */}
       <Route path="/victim-portal">

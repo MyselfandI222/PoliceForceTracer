@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, startTransition } from "react";
 import { Layout } from "@/components/layout";
 import { DemoWalletSelector } from "@/components/demo-wallet-selector";
 import { TraceExecutionViewer } from "@/components/trace-execution-viewer";
@@ -49,21 +49,29 @@ export default function DemoInvestigation() {
   const [freezeRequestData, setFreezeRequestData] = useState<any>(null);
 
   const handleWalletSelect = (wallet: KnownWallet) => {
-    setSelectedWallet(wallet);
+    startTransition(() => {
+      setSelectedWallet(wallet);
+    });
   };
 
   const handleStartTrace = (address: string, caseNum: string) => {
-    setCaseNumber(caseNum);
-    setCurrentPhase("tracing");
+    startTransition(() => {
+      setCaseNumber(caseNum);
+      setCurrentPhase("tracing");
+    });
   };
 
   const handleLocationFound = (location: LocationInfo) => {
-    setLocationInfo(location);
+    startTransition(() => {
+      setLocationInfo(location);
+    });
   };
 
   const handleFreezeRequest = (requestData: any) => {
-    setFreezeRequestData(requestData);
-    setCurrentPhase("freeze");
+    startTransition(() => {
+      setFreezeRequestData(requestData);
+      setCurrentPhase("freeze");
+    });
   };
 
   const handleRequestSent = () => {
@@ -71,11 +79,13 @@ export default function DemoInvestigation() {
   };
 
   const resetDemo = () => {
-    setCurrentPhase("selection");
-    setSelectedWallet(null);
-    setCaseNumber("");
-    setLocationInfo(null);
-    setFreezeRequestData(null);
+    startTransition(() => {
+      setCurrentPhase("selection");
+      setSelectedWallet(null);
+      setCaseNumber("");
+      setLocationInfo(null);
+      setFreezeRequestData(null);
+    });
   };
 
   const getPhaseIcon = (phase: string) => {
