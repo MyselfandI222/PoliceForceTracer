@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Layout } from "@/components/layout";
+import { VictimLayout } from "@/components/victim-layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -176,7 +176,7 @@ export default function VictimPortal() {
   const recoveryRate = totalStolen > 0 ? Math.round((totalRecovered / totalStolen) * 100) : 0;
 
   return (
-    <Layout>
+    <VictimLayout>
       {/* Header */}
       <header className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-6">
         <div className="flex items-center justify-between">
@@ -659,6 +659,6 @@ export default function VictimPortal() {
       </div>
 
       {/* Case Details Modal would go here */}
-    </Layout>
+    </VictimLayout>
   );
 }

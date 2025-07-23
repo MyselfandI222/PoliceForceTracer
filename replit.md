@@ -174,6 +174,13 @@ The application is designed for law enforcement use with security, audit trails,
 - No manual investigation by officers - all cryptocurrency tracing is automated
 - Demo system showcases complete investigation workflow from selection to asset freeze
 
+**Updated Victim Portal Navigation (July 23, 2025):**
+- Created separate VictimSidebar and VictimLayout components for victim-specific interface
+- Victims now see simplified navigation: "My Cases" and "Upgrade to Premium" only
+- Removed officer-specific sections (Active Traces, Case Files, Reports) from victim view
+- Maintained Settings and Help access for both user types
+- Clear separation between Law Enforcement Portal and Victim Portal branding
+
 ## Testing Credentials
 
 **Administrator Portal:**
