@@ -1,15 +1,16 @@
+import { Redirect } from "wouter";
+
 export default function Settings() {
   // Router component that directs to appropriate settings page based on user type
   const userType = localStorage.getItem('userType');
   
+  console.log('Settings router - userType:', userType); // Debug log
+  
   if (userType === 'victim') {
-    window.location.href = '/victim-settings';
-    return null;
+    return <Redirect to="/victim-settings" />;
   } else if (userType === 'admin') {
-    window.location.href = '/admin-settings';
-    return null;
+    return <Redirect to="/admin-settings" />;
   } else {
-    window.location.href = '/officer-settings';
-    return null;
+    return <Redirect to="/officer-settings" />;
   }
 }
