@@ -9,7 +9,7 @@ const victimNavigation = [
 ];
 
 const accountNavigation = [
-  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Settings", href: "/victim-settings", icon: Settings },
   { name: "Help & Support", href: "/help", icon: HelpCircle },
 ];
 

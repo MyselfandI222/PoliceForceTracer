@@ -14,6 +14,9 @@ import Dashboard from "@/pages/dashboard";
 import Admin from "@/pages/admin";
 import PremiumServices from "@/pages/premium-services";
 import Settings from "@/pages/settings";
+import OfficerSettings from "@/pages/officer-settings";
+import AdminSettings from "@/pages/admin-settings";
+import VictimSettings from "@/pages/victim-settings";
 import Help from "@/pages/help";
 import VictimPortal from "@/pages/victim-portal";
 import PoliceAdmin from "@/pages/police-admin";
@@ -70,6 +73,21 @@ function Router() {
       <Route path="/settings">
         <ProtectedRoute>
           <Settings />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/officer-settings">
+        <ProtectedRoute>
+          <OfficerSettings />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin-settings">
+        <ProtectedRoute>
+          <AdminSettings />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/victim-settings">
+        <ProtectedRoute>
+          <VictimSettings />
         </ProtectedRoute>
       </Route>
       
