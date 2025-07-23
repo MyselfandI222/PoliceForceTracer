@@ -189,6 +189,13 @@ The application is designed for law enforcement use with security, audit trails,
 - Settings router automatically directs users to appropriate settings page based on role
 - Direct navigation: /officer-settings, /admin-settings, /victim-settings
 
+**Live Demo Access for All Portals (July 23, 2025):**
+- Added Live Demo to victim portal navigation alongside "My Cases" and "Upgrade to Premium"
+- Officer portal already included Live Demo in main navigation
+- Admin portal uses regular Layout component with full navigation including Live Demo
+- All user types can now access the complete demo investigation workflow
+- Demo features: Real wallet selection, live blockchain analysis, location discovery, exchange freeze requests
+
 ## Testing Credentials
 
 **Administrator Portal:**

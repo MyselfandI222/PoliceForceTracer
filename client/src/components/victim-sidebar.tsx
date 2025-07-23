@@ -1,10 +1,11 @@
 import { Link, useLocation } from "wouter";
-import { Shield, User, HelpCircle, LogOut, Settings, CreditCard } from "lucide-react";
+import { Shield, User, HelpCircle, LogOut, Settings, CreditCard, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { logout } from "@/lib/auth";
 
 const victimNavigation = [
   { name: "My Cases", href: "/victim-portal", icon: User },
+  { name: "Live Demo", href: "/demo", icon: Activity },
   { name: "Upgrade to Premium", href: "/premium-services", icon: CreditCard },
 ];
 
