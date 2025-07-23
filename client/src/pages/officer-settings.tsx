@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Layout } from "@/components/layout";
+import { ThemeSelector } from "@/components/theme-selector";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +24,8 @@ import {
   Building2,
   Settings,
   Save,
-  AlertTriangle
+  AlertTriangle,
+  Palette
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -113,11 +115,12 @@ export default function OfficerSettings() {
         </div>
 
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="profile">Profile</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
             <TabsTrigger value="security">Security</TabsTrigger>
             <TabsTrigger value="investigation">Investigation</TabsTrigger>
+            <TabsTrigger value="appearance">Appearance</TabsTrigger>
           </TabsList>
 
           <TabsContent value="profile">
@@ -470,6 +473,10 @@ export default function OfficerSettings() {
                 </Button>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="appearance">
+            <ThemeSelector />
           </TabsContent>
         </Tabs>
       </div>

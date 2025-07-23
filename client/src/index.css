@@ -23,6 +23,8 @@
   --destructive-foreground: hsl(60, 9.1%, 97.8%);
   --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
+  --font-size-base: 1rem;
+  --spacing-base: 1rem;
 }
 
 .dark {
@@ -55,6 +57,7 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    font-size: var(--font-size-base);
   }
 }
 
@@ -67,4 +70,75 @@
 .glass-effect {
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.1);
+}
+
+/* Color Theme Variations */
+[data-color-theme="blue"] {
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --ring: hsl(207, 90%, 54%);
+}
+
+[data-color-theme="green"] {
+  --primary: hsl(142, 76%, 36%);
+  --primary-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(142, 76%, 36%);
+}
+
+[data-color-theme="purple"] {
+  --primary: hsl(262, 83%, 58%);
+  --primary-foreground: hsl(210, 20%, 98%);
+  --ring: hsl(262, 83%, 58%);
+}
+
+[data-color-theme="orange"] {
+  --primary: hsl(25, 95%, 53%);
+  --primary-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(25, 95%, 53%);
+}
+
+[data-color-theme="red"] {
+  --primary: hsl(0, 84%, 60%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --ring: hsl(0, 84%, 60%);
+}
+
+[data-color-theme="indigo"] {
+  --primary: hsl(239, 84%, 67%);
+  --primary-foreground: hsl(210, 20%, 98%);
+  --ring: hsl(239, 84%, 67%);
+}
+
+/* Font Size Variations */
+[data-font-size="small"] {
+  --font-size-base: 0.875rem;
+}
+
+[data-font-size="medium"] {
+  --font-size-base: 1rem;
+}
+
+[data-font-size="large"] {
+  --font-size-base: 1.125rem;
+}
+
+/* Compact Mode */
+.compact {
+  --spacing-base: 0.75rem;
+}
+
+.compact .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 1rem;
+}
+
+.compact .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 0.75rem;
+}
+
+.compact .p-6 {
+  padding: 1rem;
+}
+
+.compact .p-4 {
+  padding: 0.75rem;
 }

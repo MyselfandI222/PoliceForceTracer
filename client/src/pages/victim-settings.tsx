@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { VictimLayout } from "@/components/victim-layout";
+import { ThemeSelector } from "@/components/theme-selector";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +23,8 @@ import {
   Shield,
   Lock,
   AlertTriangle,
-  Clock
+  Clock,
+  Palette
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -108,11 +110,12 @@ export default function VictimSettings() {
         </div>
 
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="profile">Profile</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
             <TabsTrigger value="privacy">Privacy</TabsTrigger>
             <TabsTrigger value="payment">Payment</TabsTrigger>
+            <TabsTrigger value="appearance">Appearance</TabsTrigger>
           </TabsList>
 
           <TabsContent value="profile">
@@ -461,6 +464,10 @@ export default function VictimSettings() {
                 </Button>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="appearance">
+            <ThemeSelector />
           </TabsContent>
         </Tabs>
       </div>
