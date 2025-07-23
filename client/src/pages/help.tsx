@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getCurrentUser } from "@/lib/auth";
 import { Layout } from "@/components/layout";
 import { VictimLayout } from "@/components/victim-layout";
+import { AdminContact } from "@/components/admin-contact";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -379,6 +380,10 @@ export default function Help() {
           </TabsContent>
 
           <TabsContent value="contact" className="space-y-6">
+            {userRole === "officer" && (
+              <AdminContact variant="card" />
+            )}
+            
             <Card>
               <CardHeader>
                 <CardTitle>{contactInfo[userRole].title}</CardTitle>
