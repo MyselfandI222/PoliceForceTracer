@@ -8,6 +8,7 @@ import { TraceStatus } from "@/components/trace-status";
 import { PremiumModal } from "@/components/premium-modal";
 import { QuickExportButton } from "@/components/quick-export-button";
 import { AdminContact } from "@/components/admin-contact";
+import { AddAdminDialog } from "@/components/add-admin-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -271,8 +272,9 @@ export default function Dashboard() {
                   <Upload className="w-4 h-4 mr-2" />
                   Upload Evidence Files
                 </Button>
-                <div className="pt-2">
+                <div className="pt-2 space-y-2">
                   <AdminContact />
+                  <AddAdminDialog />
                 </div>
               </CardContent>
             </Card>

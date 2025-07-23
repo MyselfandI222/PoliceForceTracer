@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { Layout } from "@/components/layout";
 import { VictimLayout } from "@/components/victim-layout";
 import { AdminContact } from "@/components/admin-contact";
+import { AddAdminDialog } from "@/components/add-admin-dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -381,7 +382,10 @@ export default function Help() {
 
           <TabsContent value="contact" className="space-y-6">
             {userRole === "officer" && (
-              <AdminContact variant="card" />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <AdminContact variant="card" />
+                <AddAdminDialog variant="card" />
+              </div>
             )}
             
             <Card>
