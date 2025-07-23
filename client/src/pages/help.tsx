@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getCurrentUser } from "@/lib/auth";
 import { Layout } from "@/components/layout";
+import { VictimLayout } from "@/components/victim-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -36,6 +37,10 @@ export default function Help() {
   };
 
   const userRole = getUserRole();
+  
+  // Determine which layout to use based on user type (same as localStorage check for consistency)
+  const userType = localStorage.getItem('userType');
+  const LayoutComponent = userType === 'victim' ? VictimLayout : Layout;
 
   const getWelcomeSection = () => {
     switch (userRole) {
@@ -190,7 +195,7 @@ export default function Help() {
   };
 
   return (
-    <Layout>
+    <LayoutComponent>
       <div className="p-6 max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -515,6 +520,6 @@ export default function Help() {
           </TabsContent>
         </Tabs>
       </div>
-    </Layout>
+    </LayoutComponent>
   );
 }

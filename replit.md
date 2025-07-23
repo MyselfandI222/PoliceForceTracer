@@ -203,6 +203,13 @@ The application is designed for law enforcement use with security, audit trails,
 - Prevents victims from seeing officer/admin interface when accessing demo
 - Maintains consistent user experience across all portals
 
+**Fixed Help & Support Layout Issue (July 23, 2025):**
+- Applied same dynamic layout fix to Help page that was causing victim redirects
+- Help page now detects user type from localStorage and shows appropriate layout
+- Victims accessing Help & Support stay within victim portal interface
+- Officers and admins see Help within their respective portal layouts
+- Resolved recurring pattern of navigation redirects between portals
+
 ## Testing Credentials
 
 **Administrator Portal:**
