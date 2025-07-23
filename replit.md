@@ -210,6 +210,13 @@ The application is designed for law enforcement use with security, audit trails,
 - Officers and admins see Help within their respective portal layouts
 - Resolved recurring pattern of navigation redirects between portals
 
+**Fixed Administrator Settings Navigation Issue (July 23, 2025):**
+- Identified sidebar Settings link was hardcoded to /officer-settings bypassing role routing
+- Updated regular sidebar Settings link from /officer-settings to /settings
+- Settings router now properly redirects administrators to /admin-settings page
+- Administrators clicking Settings stay within their admin interface instead of seeing officer portal
+- Maintains proper role-based settings page separation for all user types
+
 ## Testing Credentials
 
 **Administrator Portal:**
