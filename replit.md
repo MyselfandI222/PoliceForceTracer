@@ -196,6 +196,13 @@ The application is designed for law enforcement use with security, audit trails,
 - All user types can now access the complete demo investigation workflow
 - Demo features: Real wallet selection, live blockchain analysis, location discovery, exchange freeze requests
 
+**Fixed Live Demo Layout Issue (July 23, 2025):**
+- Demo investigation page now detects user type and displays appropriate layout
+- Victims see Live Demo within VictimLayout (victim sidebar navigation)
+- Officers and admins see Live Demo within regular Layout (full navigation)
+- Prevents victims from seeing officer/admin interface when accessing demo
+- Maintains consistent user experience across all portals
+
 ## Testing Credentials
 
 **Administrator Portal:**

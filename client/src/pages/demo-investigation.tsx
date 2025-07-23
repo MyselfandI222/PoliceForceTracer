@@ -1,5 +1,6 @@
 import { useState, startTransition } from "react";
 import { Layout } from "@/components/layout";
+import { VictimLayout } from "@/components/victim-layout";
 import { DemoWalletSelector } from "@/components/demo-wallet-selector";
 import { TraceExecutionViewer } from "@/components/trace-execution-viewer";
 import { FreezeRequestManager } from "@/components/freeze-request-manager";
@@ -43,6 +44,10 @@ interface LocationInfo {
 
 export default function DemoInvestigation() {
   const [currentPhase, setCurrentPhase] = useState<"selection" | "tracing" | "freeze">("selection");
+  
+  // Determine which layout to use based on user type
+  const userType = localStorage.getItem('userType');
+  const LayoutComponent = userType === 'victim' ? VictimLayout : Layout;
   const [selectedWallet, setSelectedWallet] = useState<KnownWallet | null>(null);
   const [caseNumber, setCaseNumber] = useState("");
   const [locationInfo, setLocationInfo] = useState<LocationInfo | null>(null);
@@ -109,7 +114,7 @@ export default function DemoInvestigation() {
   };
 
   return (
-    <Layout>
+    <LayoutComponent>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -308,6 +313,6 @@ export default function DemoInvestigation() {
           </CardContent>
         </Card>
       </div>
-    </Layout>
+    </LayoutComponent>
   );
 }
