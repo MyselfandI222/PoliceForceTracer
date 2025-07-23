@@ -217,6 +217,13 @@ The application is designed for law enforcement use with security, audit trails,
 - Administrators clicking Settings stay within their admin interface instead of seeing officer portal
 - Maintains proper role-based settings page separation for all user types
 
+**Removed Premium Services from Officer/Admin Navigation (July 23, 2025):**
+- Removed "Premium Services" from officer and administrator sidebar navigation
+- Premium processing is victim-exclusive - only victims can upgrade cases to instant processing ($995)
+- Officer/admin role is data entry only - they input case information but don't handle payments
+- Victim sidebar correctly retains "Upgrade to Premium" option
+- Maintains proper separation of responsibilities: officers input, victims upgrade, system processes
+
 ## Testing Credentials
 
 **Administrator Portal:**

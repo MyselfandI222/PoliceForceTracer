@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Shield, BarChart3, Search, FolderOpen, FileText, Star, Settings, HelpCircle, LogOut, Activity } from "lucide-react";
+import { Shield, BarChart3, Search, FolderOpen, FileText, Settings, HelpCircle, LogOut, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { logout } from "@/lib/auth";
 
@@ -9,7 +9,6 @@ const navigation = [
   { name: "Active Traces", href: "/traces", icon: Search },
   { name: "Case Files", href: "/cases", icon: FolderOpen },
   { name: "Reports", href: "/reports", icon: FileText },
-  { name: "Premium Services", href: "/premium", icon: Star },
 ];
 
 const accountNavigation = [
