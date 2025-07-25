@@ -120,13 +120,13 @@ export default function AdminSettings() {
         </div>
 
         <Tabs defaultValue="system" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="system">System</TabsTrigger>
-            <TabsTrigger value="users">User Management</TabsTrigger>
-            <TabsTrigger value="officers">Officer Management</TabsTrigger>
-            <TabsTrigger value="departments">Departments</TabsTrigger>
-            <TabsTrigger value="api">API & Security</TabsTrigger>
-            <TabsTrigger value="appearance">Appearance</TabsTrigger>
+          <TabsList className="flex flex-wrap gap-2 h-auto p-2">
+            <TabsTrigger value="system" className="flex-1 min-w-fit">System</TabsTrigger>
+            <TabsTrigger value="users" className="flex-1 min-w-fit">User Management</TabsTrigger>
+            <TabsTrigger value="officers" className="flex-1 min-w-fit">Officer Management</TabsTrigger>
+            <TabsTrigger value="departments" className="flex-1 min-w-fit">Departments</TabsTrigger>
+            <TabsTrigger value="api" className="flex-1 min-w-fit">API & Security</TabsTrigger>
+            <TabsTrigger value="appearance" className="flex-1 min-w-fit">Appearance</TabsTrigger>
           </TabsList>
 
           <TabsContent value="system">
