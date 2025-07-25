@@ -71,6 +71,11 @@ function Router() {
           <PremiumServices />
         </ProtectedRoute>
       </Route>
+      <Route path="/premium-services">
+        <ProtectedRoute>
+          <PremiumServices />
+        </ProtectedRoute>
+      </Route>
       <Route path="/settings">
         <ProtectedRoute>
           <Settings />
