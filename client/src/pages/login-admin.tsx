@@ -7,17 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Shield, Users, ArrowLeft, Eye, EyeOff, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { TEST_CREDENTIALS } from "@/constants/test-credentials";
 
 export default function LoginAdmin() {
   const [, setLocation] = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    badgeNumber: "ADMIN-4987",
-    email: "test@test.com",
-    password: "password",
-    department: "METRO-CYBER-01"
-  });
+  const [formData, setFormData] = useState(TEST_CREDENTIALS.ADMIN);
   const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +30,7 @@ export default function LoginAdmin() {
       setIsLoading(false);
       
       // Mock successful login - accept standard test credentials
-      if ((formData.email === 'test@test.com' && formData.password === 'password') || 
+      if ((formData.email === TEST_CREDENTIALS.ADMIN.email && formData.password === TEST_CREDENTIALS.ADMIN.password) || 
           (formData.badgeNumber && formData.email && formData.password && formData.department)) {
         localStorage.setItem('userType', 'admin');
         localStorage.setItem('token', 'admin-mock-token');

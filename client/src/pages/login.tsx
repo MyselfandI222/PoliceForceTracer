@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Shield, Loader2, ArrowLeft } from "lucide-react";
 import { login } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
+import { TEST_CREDENTIALS } from "@/constants/test-credentials";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -25,10 +26,7 @@ export default function Login() {
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "test@test.com",
-      password: "password",
-    },
+    defaultValues: TEST_CREDENTIALS.OFFICER,
   });
 
   const onSubmit = async (data: LoginFormData) => {

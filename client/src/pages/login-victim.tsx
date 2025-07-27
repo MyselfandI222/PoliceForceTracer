@@ -7,16 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Shield, UserCheck, ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { TEST_CREDENTIALS } from "@/constants/test-credentials";
 
 export default function LoginVictim() {
   const [, setLocation] = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    caseNumber: "CRY-2024-78432",
-    email: "test@test.com",
-    password: "password"
-  });
+  const [formData, setFormData] = useState(TEST_CREDENTIALS.VICTIM);
   const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +30,7 @@ export default function LoginVictim() {
       setIsLoading(false);
       
       // Mock successful login - accept standard test credentials or specific case number
-      if ((formData.email === 'test@test.com' && formData.password === 'password' && formData.caseNumber === 'CRY-2024-78432') || 
+      if ((formData.email === TEST_CREDENTIALS.VICTIM.email && formData.password === TEST_CREDENTIALS.VICTIM.password && formData.caseNumber === TEST_CREDENTIALS.VICTIM.caseNumber) || 
           (formData.caseNumber && formData.email && formData.password)) {
         localStorage.setItem('userType', 'victim');
         localStorage.setItem('token', 'victim-mock-token');
