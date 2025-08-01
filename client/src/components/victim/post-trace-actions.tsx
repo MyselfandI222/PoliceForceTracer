@@ -66,7 +66,10 @@ export default function PostTraceActions({
   };
 
   const handleRetrieveMoney = () => {
-    setSelectedAction('recovery');
+    // Only set recovery action if not already in prosecution mode
+    if (selectedAction !== 'prosecute') {
+      setSelectedAction('recovery');
+    }
     // First try the primary recovery service
     window.open('https://recoverycrypto.org', '_blank');
   };
@@ -82,30 +85,73 @@ export default function PostTraceActions({
 
   if (selectedAction === 'prosecute') {
     return (
-      <Card className="border-green-200 bg-green-50">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-green-800">
-            <CheckCircle className="w-5 h-5" />
-            Case Submitted to Law Enforcement
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-green-700 mb-4">
-            Your case has been successfully submitted to police officers for criminal investigation. 
-            You will receive updates on the investigation progress.
-          </p>
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="font-medium">Case ID:</span>
-              <span>{traceId}</span>
+      <div className="space-y-4">
+        <Card className="border-green-200 bg-green-50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-green-800">
+              <CheckCircle className="w-5 h-5" />
+              Case Submitted to Law Enforcement
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-green-700 mb-4">
+              Your case has been successfully submitted to police officers for criminal investigation. 
+              You will receive updates on the investigation progress.
+            </p>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="font-medium">Case ID:</span>
+                <span>{traceId}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="font-medium">Status:</span>
+                <Badge variant="default">Under Investigation</Badge>
+              </div>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="font-medium">Status:</span>
-              <Badge variant="default">Under Investigation</Badge>
+          </CardContent>
+        </Card>
+
+        {/* Recovery options still available */}
+        <Card className="border-blue-200 bg-blue-50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-blue-800">
+              <DollarSign className="w-5 h-5" />
+              Recovery Options Still Available
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-blue-700">
+              While your case is under investigation, you can still pursue fund recovery through our partner services.
+            </p>
+            
+            <div className="space-y-3">
+              <Button 
+                onClick={handleRetrieveMoney}
+                className="w-full bg-blue-600 hover:bg-blue-700"
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Visit RecoveryCrypto.org
+              </Button>
+              
+              <Button 
+                onClick={handleCapitalLossClaim}
+                variant="outline" 
+                className="w-full border-blue-300 text-blue-700 hover:bg-blue-100"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                Claim Capital Loss (CRA)
+              </Button>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+            
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription className="text-sm">
+                Recovery efforts can run parallel to the criminal investigation. Both approaches may help maximize your chances of getting funds back.
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
