@@ -70,8 +70,14 @@ export default function PostTraceActions({
     if (selectedAction !== 'prosecute') {
       setSelectedAction('recovery');
     }
-    // First try the primary recovery service
-    window.open('https://recoverycrypto.org', '_blank');
+    // Demo: In production, this would link to a legitimate recovery service
+    // Using Chainalysis as an example of a real recovery service
+    toast({
+      title: "Demo Mode",
+      description: "In production, this would redirect to a legitimate crypto recovery service like Chainalysis or CNC Intelligence.",
+    });
+    // For demo purposes, we'll show a placeholder
+    window.open('https://www.chainalysis.com/', '_blank');
   };
 
   const handleCapitalLossClaim = () => {
@@ -130,7 +136,7 @@ export default function PostTraceActions({
                 className="w-full bg-blue-600 hover:bg-blue-700"
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
-                Visit RecoveryCrypto.org
+                Contact Recovery Service (Demo)
               </Button>
               
               <Button 
@@ -292,7 +298,7 @@ export default function PostTraceActions({
                 className="w-full bg-green-600 hover:bg-green-700"
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
-                Start Recovery Process
+                Start Recovery Process (Demo)
               </Button>
             </CardContent>
           </Card>
