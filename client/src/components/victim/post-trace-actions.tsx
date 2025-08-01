@@ -130,7 +130,7 @@ export default function PostTraceActions({
               className="w-full bg-blue-600 hover:bg-blue-700"
             >
               <ExternalLink className="w-4 h-4 mr-2" />
-              Visit Recovery Service Again
+              Visit RecoveryCrypto.org Again
             </Button>
             
             <Button 
