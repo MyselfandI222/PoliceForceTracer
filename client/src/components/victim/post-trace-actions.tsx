@@ -70,14 +70,8 @@ export default function PostTraceActions({
     if (selectedAction !== 'prosecute') {
       setSelectedAction('recovery');
     }
-    // Demo: In production, this would link to a legitimate recovery service
-    // Using Chainalysis as an example of a real recovery service
-    toast({
-      title: "Demo Mode",
-      description: "In production, this would redirect to a legitimate crypto recovery service like Chainalysis or CNC Intelligence.",
-    });
-    // For demo purposes, we'll show a placeholder
-    window.open('https://www.chainalysis.com/', '_blank');
+    // Direct to Asset Reality for professional cryptocurrency recovery
+    window.open('https://www.assetreality.com/', '_blank');
   };
 
   const handleCapitalLossClaim = () => {
@@ -136,7 +130,7 @@ export default function PostTraceActions({
                 className="w-full bg-blue-600 hover:bg-blue-700"
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
-                Contact Recovery Service (Demo)
+                Visit Asset Reality
               </Button>
               
               <Button 
@@ -172,7 +166,7 @@ export default function PostTraceActions({
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-blue-700">
-            You've been directed to our partner recovery service. If they cannot track down your funds, 
+            You've been directed to Asset Reality for professional cryptocurrency recovery services. If they cannot recover your funds, 
             you can claim a capital loss with the Canada Revenue Agency.
           </p>
           
@@ -182,7 +176,7 @@ export default function PostTraceActions({
               className="w-full bg-blue-600 hover:bg-blue-700"
             >
               <ExternalLink className="w-4 h-4 mr-2" />
-              Visit RecoveryCrypto.org Again
+              Visit Asset Reality Again
             </Button>
             
             <Button 
@@ -298,7 +292,7 @@ export default function PostTraceActions({
                 className="w-full bg-green-600 hover:bg-green-700"
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
-                Start Recovery Process (Demo)
+                Start Recovery Process
               </Button>
             </CardContent>
           </Card>
