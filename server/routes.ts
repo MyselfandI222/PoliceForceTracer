@@ -465,6 +465,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // AI routes for OpenAI integration
   app.use("/api/ai", aiRoutes);
 
+  // Victim case submission endpoint
+  app.post("/api/victim/submit-case", async (req, res) => {
+    try {
+      const { traceId, actionType, reason, recoveryAmount, riskLevel } = req.body;
+      
+      // Mock submission to police officers (in production, this would create a case in the database)
+      const caseSubmission = {
+        id: `CASE-${Date.now()}`,
+        originalTraceId: traceId,
+        actionType,
+        reason,
+        recoveryAmount,
+        riskLevel,
+        status: 'submitted',
+        submittedAt: new Date().toISOString(),
+        assignedOfficer: 'Detective Sarah Johnson',
+        department: 'Metro PD Cyber Crimes'
+      };
+      
+      console.log('Victim case submitted to police:', caseSubmission);
+      
+      res.json({
+        success: true,
+        message: 'Case successfully submitted to law enforcement',
+        caseId: caseSubmission.id,
+        assignedOfficer: caseSubmission.assignedOfficer
+      });
+    } catch (error) {
+      console.error('Error submitting victim case:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: 'Failed to submit case to law enforcement' 
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

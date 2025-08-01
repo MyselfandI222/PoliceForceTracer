@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { QuickExportButton } from "@/components/quick-export-button";
+import PostTraceActions from "@/components/victim/post-trace-actions";
 
 import { 
   Shield, 
@@ -361,6 +362,18 @@ export default function VictimPortal() {
                           </div>
                         </div>
                       </div>
+
+                      {/* Post-Trace Actions for completed cases */}
+                      {case_.status === 'completed' && (
+                        <div className="mt-4 pt-4 border-t">
+                          <PostTraceActions 
+                            traceId={case_.caseNumber}
+                            traceStatus={case_.status}
+                            recoveryAmount={case_.recoveredAmount}
+                            riskLevel="MEDIUM"
+                          />
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
