@@ -8,7 +8,7 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
-function getAuthHeaders() {
+function getAuthHeaders(): Record<string, string> {
   const token = getAuthToken();
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
@@ -18,7 +18,7 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  const headers = {
+  const headers: Record<string, string> = {
     ...getAuthHeaders(),
     ...(data ? { "Content-Type": "application/json" } : {}),
   };
@@ -41,7 +41,7 @@ export const getQueryFn: <T>(options: {
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
     const res = await fetch(queryKey.join("/") as string, {
-      headers: getAuthHeaders(),
+      headers: getAuthHeaders() as HeadersInit,
       credentials: "include",
     });
 

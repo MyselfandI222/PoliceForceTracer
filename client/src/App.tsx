@@ -21,6 +21,7 @@ import VictimSettings from "@/pages/victim-settings";
 import Help from "@/pages/help";
 import VictimPortal from "@/pages/victim-portal";
 import PoliceAdmin from "@/pages/police-admin";
+import AIAssistant from "@/pages/ai-assistant";
 import { lazy } from "react";
 const DemoInvestigation = lazy(() => import("@/pages/demo-investigation"));
 import NotFound from "@/pages/not-found";
@@ -97,6 +98,11 @@ function Router() {
         </ProtectedRoute>
       </Route>
       
+      <Route path="/ai-assistant">
+        <ProtectedRoute>
+          <AIAssistant />
+        </ProtectedRoute>
+      </Route>
       <Route path="/help">
         <ProtectedRoute>
           <Help />

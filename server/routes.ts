@@ -13,6 +13,7 @@ import {
   insertTraceSchema,
   type User 
 } from "@shared/schema";
+import aiRoutes from "./routes/ai";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || "sk_test_...";
@@ -460,6 +461,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       role: req.user.role,
     });
   });
+
+  // AI routes for OpenAI integration
+  app.use("/api/ai", aiRoutes);
 
   const httpServer = createServer(app);
   return httpServer;
