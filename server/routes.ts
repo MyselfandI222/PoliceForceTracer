@@ -590,19 +590,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: 'Access denied. Officers only.' });
       }
 
-      // Mock assigned victims list
-      const mockAssignedVictims = [
-        {
-          id: 4,
-          name: "Jane Victim",
-          email: "victim@test.com",
-          phone: "(555) 234-5678",
-          address: "123 Main St, City, State",
-          incidentType: "Cryptocurrency Fraud",
-          assignedAt: "2024-01-15T10:30:00Z",
-          assignmentReason: "Similar case history with crypto fraud investigations"
-        }
-      ];
+      // Mock assigned victims list - empty to start fresh
+      const mockAssignedVictims = [];
       
       res.json(mockAssignedVictims);
     } catch (error) {

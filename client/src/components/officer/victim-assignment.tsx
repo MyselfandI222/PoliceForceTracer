@@ -65,8 +65,19 @@ export default function VictimAssignment() {
 
   // Search for victim by email
   const { data: searchedVictim, isLoading: searchLoading } = useQuery({
-    queryKey: ['/api/victims/search', email],
-    queryFn: () => fetch(`/api/victims/search?email=${email}`).then(res => res.ok ? res.json() : null),
+    queryKey: ['/api/victims/search', { email }],
+    queryFn: async () => {
+      if (!email || email.length < 3) return null;
+      try {
+        const res = await apiRequest('GET', `/api/victims/search?email=${encodeURIComponent(email)}`);
+        return await res.json();
+      } catch (error: any) {
+        if (error.message?.includes('404')) {
+          return null;
+        }
+        throw error;
+      }
+    },
     enabled: email.length >= 3,
     retry: false,
   });
