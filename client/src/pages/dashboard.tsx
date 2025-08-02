@@ -9,6 +9,7 @@ import { PremiumModal } from "@/components/premium-modal";
 import { QuickExportButton } from "@/components/quick-export-button";
 import { AdminContact } from "@/components/admin-contact";
 import { AddAdminDialog } from "@/components/add-admin-dialog";
+import VictimAssignment from "@/components/officer/victim-assignment";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -247,6 +248,13 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Officer-specific Victim Assignment Section */}
+        {user?.role === 'officer' || user?.role === 'admin' || user?.role === 'super_admin' ? (
+          <div className="mb-8">
+            <VictimAssignment />
+          </div>
+        ) : null}
 
         {/* Quick Actions & Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">

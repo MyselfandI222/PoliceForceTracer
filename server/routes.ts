@@ -499,37 +499,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: 'Access denied. Victims only.' });
       }
       
-      // Mock: No assignment initially for victims
-      // In production, query victimOfficerAssignments table
-      res.status(404).json({ message: 'No officer assigned' });
-    } catch (error) {
-      console.error('Error fetching officer assignment:', error);
-      res.status(500).json({ message: 'Failed to fetch officer assignment' });
-    }
-  });
-
-  // Search for officers by badge number (accessible to victims)
-  app.get("/api/officers/search", authenticateToken, async (req, res) => {
-    try {
-      // Check if user is authenticated
-      if (!req.user) {
-        return res.status(401).json({ message: 'Unauthorized' });
-      }
-
-      // Only victims can search for officers to assign
-      if (req.user.role !== 'victim') {
-        return res.status(403).json({ message: 'Access denied. Victims only.' });
-      }
-
-      const badgeNumber = req.query.badgeNumber as string;
-      
-      if (!badgeNumber || badgeNumber.length < 3) {
-        return res.status(400).json({ message: 'Badge number must be at least 3 characters' });
-      }
-      
-      // Mock officer search - in production, query users table where role='officer'
-      const mockOfficers = [
-        {
+      // Mock: Check if victim has an assigned officer
+      // In production, query victimOfficerAssignments table by victimId
+      const mockAssignment = {
+        id: 1,
+        officer: {
           id: 2,
           name: "Sarah Johnson",
           badgeNumber: "12345",
@@ -539,46 +513,119 @@ export async function registerRoutes(app: Express): Promise<Server> {
           specialization: "Cryptocurrency Crimes",
           rank: "Detective"
         },
-        {
-          id: 3,
-          name: "Mike Chen",
-          badgeNumber: "67890",
-          department: "Metro PD Financial Crimes",
-          email: "m.chen@metropd.gov",
-          phone: "(555) 987-6543",
-          specialization: "Financial Investigations",
-          rank: "Sergeant"
-        }
-      ];
+        assignedAt: "2024-01-15T10:30:00Z",
+        assignedBy: "officer_assignment",
+        isActive: true
+      };
       
-      const officer = mockOfficers.find(o => o.badgeNumber === badgeNumber);
-      
-      if (officer) {
-        res.json(officer);
-      } else {
-        res.status(404).json({ message: 'Officer not found' });
-      }
+      res.json(mockAssignment);
     } catch (error) {
-      console.error('Error searching for officer:', error);
-      res.status(500).json({ message: 'Failed to search for officer' });
+      console.error('Error fetching officer assignment:', error);
+      res.status(500).json({ message: 'Failed to fetch officer assignment' });
     }
   });
 
-  // Assign officer to victim
-  app.post("/api/victim/assign-officer", authenticateToken, async (req, res) => {
+  // Search for victims by email (accessible to officers for assignment)
+  app.get("/api/victims/search", authenticateToken, async (req, res) => {
     try {
       // Check if user is authenticated
       if (!req.user) {
         return res.status(401).json({ message: 'Unauthorized' });
       }
 
-      // Only victims can assign officers to themselves
-      if (req.user.role !== 'victim') {
-        return res.status(403).json({ message: 'Access denied. Victims only.' });
+      // Only officers can search for victims to assign
+      if (req.user.role !== 'officer' && req.user.role !== 'admin' && req.user.role !== 'super_admin') {
+        return res.status(403).json({ message: 'Access denied. Officers only.' });
       }
 
-      const { officerId, assignedBy } = req.body;
-      const victimId = req.user.id;
+      const email = req.query.email as string;
+      
+      if (!email || email.length < 3) {
+        return res.status(400).json({ message: 'Email must be at least 3 characters' });
+      }
+      
+      // Mock victim search - in production, query users table where role='victim'
+      const mockVictims = [
+        {
+          id: 4,
+          name: "Jane Victim",
+          email: "victim@test.com",
+          phone: "(555) 234-5678",
+          address: "123 Main St, City, State",
+          incidentType: "Cryptocurrency Fraud"
+        },
+        {
+          id: 5,
+          name: "John Doe",
+          email: "john.doe@email.com",
+          phone: "(555) 345-6789",
+          address: "456 Oak Ave, City, State",
+          incidentType: "Bitcoin Scam"
+        }
+      ];
+      
+      const victim = mockVictims.find(v => v.email.toLowerCase().includes(email.toLowerCase()));
+      
+      if (victim) {
+        res.json(victim);
+      } else {
+        res.status(404).json({ message: 'Victim not found' });
+      }
+    } catch (error) {
+      console.error('Error searching for victim:', error);
+      res.status(500).json({ message: 'Failed to search for victim' });
+    }
+  });
+
+  // Get officer's assigned victims
+  app.get("/api/officer/assigned-victims", authenticateToken, async (req, res) => {
+    try {
+      // Check if user is authenticated
+      if (!req.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      // Only officers can access their assigned victims
+      if (req.user.role !== 'officer' && req.user.role !== 'admin' && req.user.role !== 'super_admin') {
+        return res.status(403).json({ message: 'Access denied. Officers only.' });
+      }
+
+      // Mock assigned victims list
+      const mockAssignedVictims = [
+        {
+          id: 4,
+          name: "Jane Victim",
+          email: "victim@test.com",
+          phone: "(555) 234-5678",
+          address: "123 Main St, City, State",
+          incidentType: "Cryptocurrency Fraud",
+          assignedAt: "2024-01-15T10:30:00Z",
+          assignmentReason: "Similar case history with crypto fraud investigations"
+        }
+      ];
+      
+      res.json(mockAssignedVictims);
+    } catch (error) {
+      console.error('Error fetching assigned victims:', error);
+      res.status(500).json({ message: 'Failed to fetch assigned victims' });
+    }
+  });
+
+  // Assign victim to officer (officers assign victims to themselves)
+  app.post("/api/officer/assign-victim", authenticateToken, async (req, res) => {
+    try {
+      // Check if user is authenticated
+      if (!req.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      // Only officers can assign victims to themselves
+      if (req.user.role !== 'officer' && req.user.role !== 'admin' && req.user.role !== 'super_admin') {
+        return res.status(403).json({ message: 'Access denied. Officers only.' });
+      }
+
+      const { victimId, assignmentReason } = req.body;
+      const officerId = req.user.id;
       
       // Mock assignment creation - in production, insert into victimOfficerAssignments table
       const assignment = {
@@ -586,27 +633,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
         victimId,
         officerId,
         assignedAt: new Date().toISOString(),
-        assignedBy: assignedBy || 'victim_request',
+        assignedBy: 'officer_assignment',
+        assignmentReason: assignmentReason || 'Case assignment',
         isActive: true
       };
       
-      console.log('Officer assigned to victim:', assignment);
+      console.log('Victim assigned to officer:', assignment);
       
       res.json({
         success: true,
-        message: 'Officer assigned successfully',
+        message: 'Victim assigned successfully',
         assignmentId: assignment.id
       });
     } catch (error) {
-      console.error('Error assigning officer:', error);
+      console.error('Error assigning victim:', error);
       res.status(500).json({ 
         success: false, 
-        message: 'Failed to assign officer' 
+        message: 'Failed to assign victim' 
       });
     }
   });
 
-  // Victim case submission endpoint (updated to use assigned officer)
+  // Victim case submission endpoint (routed to assigned officer)
   app.post("/api/victim/submit-case", authenticateToken, async (req, res) => {
     try {
       // Check if user is authenticated
@@ -622,12 +670,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { traceId, actionType, reason, recoveryAmount, riskLevel } = req.body;
       const victimId = req.user.id;
       
-      // Check if victim has an assigned officer (in production, query victimOfficerAssignments)
-      // For now, return error if no officer assigned
-      res.status(400).json({
-        success: false,
-        message: 'Please assign a police officer first before submitting cases',
-        requiresOfficerAssignment: true
+      // Get assigned officer (mock - in production, query victimOfficerAssignments table)
+      const assignedOfficer = {
+        id: 2,
+        name: "Detective Sarah Johnson",
+        badgeNumber: "12345",
+        department: "Metro PD Cyber Crimes"
+      };
+      
+      // Create case submission routed to assigned officer
+      const caseSubmission = {
+        id: `CASE-${Date.now()}`,
+        victimId,
+        officerId: assignedOfficer.id,
+        originalTraceId: traceId,
+        actionType,
+        reason,
+        recoveryAmount,
+        riskLevel,
+        status: 'submitted',
+        submittedAt: new Date().toISOString(),
+        routingMethod: 'assigned_officer'
+      };
+      
+      console.log('Case submitted to assigned officer:', caseSubmission);
+      
+      res.json({
+        success: true,
+        message: `Case successfully submitted to ${assignedOfficer.name}`,
+        caseId: caseSubmission.id,
+        assignedOfficer: assignedOfficer.name,
+        department: assignedOfficer.department
       });
     } catch (error) {
       console.error('Error submitting victim case:', error);
