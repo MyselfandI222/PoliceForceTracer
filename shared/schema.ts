@@ -54,6 +54,32 @@ export const paymentRecords = pgTable("payment_records", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Victim-Officer Assignment table for direct police submissions
+export const victimOfficerAssignments = pgTable("victim_officer_assignments", {
+  id: serial("id").primaryKey(),
+  victimId: integer("victim_id").notNull().references(() => users.id),
+  officerId: integer("officer_id").notNull().references(() => users.id),
+  assignedAt: timestamp("assigned_at").defaultNow().notNull(),
+  assignedBy: text("assigned_by").notNull().default("victim_request"), // How the assignment was made
+  isActive: boolean("is_active").notNull().default(true),
+});
+
+// Police case submissions from victims
+export const policeCaseSubmissions = pgTable("police_case_submissions", {
+  id: serial("id").primaryKey(),
+  victimId: integer("victim_id").notNull().references(() => users.id),
+  officerId: integer("officer_id").notNull().references(() => users.id),
+  originalTraceId: text("original_trace_id").notNull(),
+  actionType: text("action_type").notNull(), // "prosecute", etc.
+  reason: text("reason").notNull(),
+  recoveryAmount: text("recovery_amount"),
+  riskLevel: text("risk_level"),
+  status: text("status").notNull().default("submitted"), // "submitted", "under_review", "accepted", "rejected"
+  submittedAt: timestamp("submitted_at").defaultNow().notNull(),
+  reviewedAt: timestamp("reviewed_at"),
+  officerNotes: text("officer_notes"),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -72,6 +98,17 @@ export const insertDepartmentSchema = createInsertSchema(departments).omit({
   id: true,
   createdAt: true,
   apiKey: true,
+});
+
+export const insertVictimOfficerAssignmentSchema = createInsertSchema(victimOfficerAssignments).omit({
+  id: true,
+  assignedAt: true,
+});
+
+export const insertPoliceCaseSubmissionSchema = createInsertSchema(policeCaseSubmissions).omit({
+  id: true,
+  submittedAt: true,
+  reviewedAt: true,
 });
 
 export const insertPaymentRecordSchema = createInsertSchema(paymentRecords).omit({

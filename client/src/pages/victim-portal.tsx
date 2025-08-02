@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { QuickExportButton } from "@/components/quick-export-button";
 import PostTraceActions from "@/components/victim/post-trace-actions";
+import OfficerAssignment from "@/components/victim/officer-assignment";
 
 import { 
   Shield, 
@@ -260,6 +261,7 @@ export default function VictimPortal() {
         <Tabs defaultValue="cases" className="space-y-6">
           <TabsList>
             <TabsTrigger value="cases">My Cases</TabsTrigger>
+            <TabsTrigger value="officer">My Police Officer</TabsTrigger>
             <TabsTrigger value="instant">Upgrade Cases</TabsTrigger>
             <TabsTrigger value="history">Action History</TabsTrigger>
             <TabsTrigger value="contact">Contact Information</TabsTrigger>
@@ -376,6 +378,41 @@ export default function VictimPortal() {
                       )}
                     </div>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="officer" className="space-y-6">
+            <OfficerAssignment />
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>How Officer Assignment Works</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold">1</div>
+                    <div>
+                      <h4 className="font-semibold">Find Your Officer</h4>
+                      <p className="text-sm text-gray-600">Enter the badge number of the police officer handling your case.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold">2</div>
+                    <div>
+                      <h4 className="font-semibold">Assign Officer</h4>
+                      <p className="text-sm text-gray-600">Once verified, assign them to receive your case submissions.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold">3</div>
+                    <div>
+                      <h4 className="font-semibold">Direct Submissions</h4>
+                      <p className="text-sm text-gray-600">All future "Punish Scammers" submissions go directly to your assigned officer.</p>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>

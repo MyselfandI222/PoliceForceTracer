@@ -465,32 +465,148 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // AI routes for OpenAI integration
   app.use("/api/ai", aiRoutes);
 
-  // Victim case submission endpoint
+  // Get victim's assigned officer
+  app.get("/api/victim/officer-assignment", async (req, res) => {
+    try {
+      // Mock victim ID (in production, get from authenticated user)
+      const victimId = 1;
+      
+      // Mock active assignment
+      const assignment = {
+        id: 1,
+        officer: {
+          id: 2,
+          name: "Sarah Johnson",
+          badgeNumber: "12345",
+          department: "Metro PD Cyber Crimes",
+          email: "s.johnson@metropd.gov",
+          phone: "(555) 123-4567",
+          specialization: "Cryptocurrency Crimes",
+          rank: "Detective"
+        },
+        assignedAt: "2024-01-15T10:30:00Z",
+        assignedBy: "victim_request",
+        isActive: true
+      };
+      
+      res.json(assignment);
+    } catch (error) {
+      console.error('Error fetching officer assignment:', error);
+      res.status(500).json({ message: 'Failed to fetch officer assignment' });
+    }
+  });
+
+  // Search for officers by badge number
+  app.get("/api/officers/search", async (req, res) => {
+    try {
+      const badgeNumber = req.query.badgeNumber as string;
+      
+      // Mock officer search (in production, query database)
+      const mockOfficers = [
+        {
+          id: 2,
+          name: "Sarah Johnson",
+          badgeNumber: "12345",
+          department: "Metro PD Cyber Crimes",
+          email: "s.johnson@metropd.gov",
+          phone: "(555) 123-4567",
+          specialization: "Cryptocurrency Crimes",
+          rank: "Detective"
+        },
+        {
+          id: 3,
+          name: "Mike Chen",
+          badgeNumber: "67890",
+          department: "Metro PD Financial Crimes",
+          email: "m.chen@metropd.gov",
+          phone: "(555) 987-6543",
+          specialization: "Financial Investigations",
+          rank: "Sergeant"
+        }
+      ];
+      
+      const officer = mockOfficers.find(o => o.badgeNumber === badgeNumber);
+      
+      if (officer) {
+        res.json(officer);
+      } else {
+        res.status(404).json({ message: 'Officer not found' });
+      }
+    } catch (error) {
+      console.error('Error searching for officer:', error);
+      res.status(500).json({ message: 'Failed to search for officer' });
+    }
+  });
+
+  // Assign officer to victim
+  app.post("/api/victim/assign-officer", async (req, res) => {
+    try {
+      const { officerId, assignedBy } = req.body;
+      // Mock victim ID (in production, get from authenticated user)
+      const victimId = 1;
+      
+      // Mock assignment creation
+      const assignment = {
+        id: Date.now(),
+        victimId,
+        officerId,
+        assignedAt: new Date().toISOString(),
+        assignedBy,
+        isActive: true
+      };
+      
+      console.log('Officer assigned to victim:', assignment);
+      
+      res.json({
+        success: true,
+        message: 'Officer assigned successfully',
+        assignmentId: assignment.id
+      });
+    } catch (error) {
+      console.error('Error assigning officer:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: 'Failed to assign officer' 
+      });
+    }
+  });
+
+  // Victim case submission endpoint (updated to use assigned officer)
   app.post("/api/victim/submit-case", async (req, res) => {
     try {
       const { traceId, actionType, reason, recoveryAmount, riskLevel } = req.body;
+      // Mock victim ID (in production, get from authenticated user)
+      const victimId = 1;
       
-      // Mock submission to police officers (in production, this would create a case in the database)
+      // Get assigned officer (mock)
+      const assignedOfficer = {
+        id: 2,
+        name: "Detective Sarah Johnson",
+        badgeNumber: "12345",
+        department: "Metro PD Cyber Crimes"
+      };
+      
+      // Create case submission in database
       const caseSubmission = {
         id: `CASE-${Date.now()}`,
+        victimId,
+        officerId: assignedOfficer.id,
         originalTraceId: traceId,
         actionType,
         reason,
         recoveryAmount,
         riskLevel,
         status: 'submitted',
-        submittedAt: new Date().toISOString(),
-        assignedOfficer: 'Detective Sarah Johnson',
-        department: 'Metro PD Cyber Crimes'
+        submittedAt: new Date().toISOString()
       };
       
-      console.log('Victim case submitted to police:', caseSubmission);
+      console.log('Victim case submitted to assigned officer:', caseSubmission);
       
       res.json({
         success: true,
-        message: 'Case successfully submitted to law enforcement',
+        message: `Case successfully submitted to ${assignedOfficer.name}`,
         caseId: caseSubmission.id,
-        assignedOfficer: caseSubmission.assignedOfficer
+        assignedOfficer: assignedOfficer.name
       });
     } catch (error) {
       console.error('Error submitting victim case:', error);
