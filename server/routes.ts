@@ -611,7 +611,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Assign victim to officer (officers assign victims to themselves)
+  // Assign victim to officer with case information and evidence
+  app.post("/api/officer/assign-victim-with-case", authenticateToken, async (req, res) => {
+    try {
+      // Check if user is authenticated
+      if (!req.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      // Only officers can assign victims to themselves
+      if (req.user.role !== 'officer' && req.user.role !== 'admin' && req.user.role !== 'super_admin') {
+        return res.status(403).json({ message: 'Access denied. Officers only.' });
+      }
+
+      const { victimId, assignmentReason, caseInfo, evidenceFiles } = req.body;
+      const officerId = req.user.id;
+      
+      // Mock assignment creation with case data
+      const assignment = {
+        id: Date.now(),
+        victimId,
+        officerId,
+        assignedAt: new Date().toISOString(),
+        assignedBy: 'officer_assignment_with_case',
+        assignmentReason: assignmentReason || 'Case assignment with initial information',
+        caseInfo: caseInfo || null,
+        evidenceFiles: evidenceFiles || [],
+        isActive: true
+      };
+      
+      // If case info is provided, also create a case record
+      if (caseInfo) {
+        const caseRecord = {
+          id: `CASE-${Date.now()}`,
+          victimId,
+          officerId,
+          caseNumber: caseInfo.caseNumber || `AUTO-${Date.now()}`,
+          cryptoType: caseInfo.cryptoType,
+          walletAddress: caseInfo.walletAddress,
+          amount: caseInfo.amount,
+          description: caseInfo.description,
+          incidentDate: caseInfo.incidentDate,
+          riskLevel: caseInfo.riskLevel,
+          status: 'open',
+          createdAt: new Date().toISOString(),
+          evidenceFiles: evidenceFiles || []
+        };
+        
+        console.log('Case record created:', caseRecord);
+      }
+      
+      console.log('Victim assigned to officer with case info:', assignment);
+      
+      res.json({
+        success: true,
+        message: 'Victim assigned successfully with case information',
+        assignmentId: assignment.id,
+        hasCaseInfo: !!caseInfo,
+        hasEvidence: evidenceFiles && evidenceFiles.length > 0
+      });
+    } catch (error) {
+      console.error('Error assigning victim with case:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: 'Failed to assign victim with case information' 
+      });
+    }
+  });
+
+  // Simple assign victim to officer (officers assign victims to themselves)
   app.post("/api/officer/assign-victim", authenticateToken, async (req, res) => {
     try {
       // Check if user is authenticated

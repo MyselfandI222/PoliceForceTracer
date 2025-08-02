@@ -7,7 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { UserPlus, Users, Search, Mail, Phone, MapPin, AlertTriangle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { UserPlus, Users, Search, Mail, Phone, MapPin, AlertTriangle, FileText, Upload, Plus, DollarSign } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -20,10 +22,38 @@ interface Victim {
   incidentType: string;
 }
 
+interface CaseInfo {
+  caseNumber: string;
+  cryptoType: string;
+  walletAddress: string;
+  amount: string;
+  description: string;
+  incidentDate: string;
+  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+}
+
+interface EvidenceFile {
+  name: string;
+  size: number;
+  type: string;
+  url?: string;
+}
+
 export default function VictimAssignment() {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [assignmentReason, setAssignmentReason] = useState("");
+  const [activeTab, setActiveTab] = useState("search");
+  const [caseInfo, setCaseInfo] = useState<CaseInfo>({
+    caseNumber: '',
+    cryptoType: 'Bitcoin',
+    walletAddress: '',
+    amount: '',
+    description: '',
+    incidentDate: '',
+    riskLevel: 'medium'
+  });
+  const [evidenceFiles, setEvidenceFiles] = useState<EvidenceFile[]>([]);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -41,10 +71,15 @@ export default function VictimAssignment() {
     retry: false,
   });
 
-  // Assign victim mutation
+  // Assign victim with case info mutation
   const assignVictimMutation = useMutation({
-    mutationFn: async (data: { victimId: number, assignmentReason: string }) => {
-      return apiRequest('/api/officer/assign-victim', {
+    mutationFn: async (data: { 
+      victimId: number, 
+      assignmentReason: string, 
+      caseInfo?: CaseInfo,
+      evidenceFiles?: EvidenceFile[]
+    }) => {
+      return apiRequest('/api/officer/assign-victim-with-case', {
         method: 'POST',
         body: data
       });
@@ -52,12 +87,10 @@ export default function VictimAssignment() {
     onSuccess: () => {
       toast({
         title: "Victim Assigned Successfully",
-        description: "The victim has been assigned to you and will receive direct case routing.",
+        description: "The victim has been assigned to you with case information and evidence files.",
       });
       queryClient.invalidateQueries({ queryKey: ['/api/officer/assigned-victims'] });
-      setIsOpen(false);
-      setEmail("");
-      setAssignmentReason("");
+      resetForm();
     },
     onError: (error) => {
       toast({
@@ -67,6 +100,23 @@ export default function VictimAssignment() {
       });
     },
   });
+
+  const resetForm = () => {
+    setIsOpen(false);
+    setEmail("");
+    setAssignmentReason("");
+    setActiveTab("search");
+    setCaseInfo({
+      caseNumber: '',
+      cryptoType: 'Bitcoin',
+      walletAddress: '',
+      amount: '',
+      description: '',
+      incidentDate: '',
+      riskLevel: 'medium'
+    });
+    setEvidenceFiles([]);
+  };
 
   const handleAssignVictim = () => {
     if (!searchedVictim || !assignmentReason.trim()) {
@@ -78,10 +128,40 @@ export default function VictimAssignment() {
       return;
     }
     
+    // Check if case info is provided
+    const hasCaseInfo = caseInfo.caseNumber || caseInfo.walletAddress || caseInfo.description;
+    
     assignVictimMutation.mutate({
       victimId: searchedVictim.id,
-      assignmentReason: assignmentReason.trim()
+      assignmentReason: assignmentReason.trim(),
+      caseInfo: hasCaseInfo ? caseInfo : undefined,
+      evidenceFiles: evidenceFiles.length > 0 ? evidenceFiles : undefined
     });
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const newFiles: EvidenceFile[] = Array.from(files).map(file => ({
+        name: file.name,
+        size: file.size,
+        type: file.type
+      }));
+      setEvidenceFiles([...evidenceFiles, ...newFiles]);
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setEvidenceFiles(evidenceFiles.filter((_, i) => i !== index));
+  };
+
+  const generateCaseNumber = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    setCaseInfo({ ...caseInfo, caseNumber: `CASE-${year}${month}${day}-${random}` });
   };
 
   return (
@@ -100,12 +180,19 @@ export default function VictimAssignment() {
               Assign New Victim
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Assign Victim to Your Cases</DialogTitle>
             </DialogHeader>
             
-            <div className="space-y-4">
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="search">Find Victim</TabsTrigger>
+                <TabsTrigger value="case" disabled={!searchedVictim}>Case Info</TabsTrigger>
+                <TabsTrigger value="evidence" disabled={!searchedVictim}>Evidence</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="search" className="space-y-4">
               <div>
                 <Label htmlFor="email">Victim Email Address</Label>
                 <div className="relative mt-1">
@@ -158,21 +245,247 @@ export default function VictimAssignment() {
                 </Card>
               )}
 
-              {searchedVictim && (
+                {searchedVictim && (
+                  <div>
+                    <Label htmlFor="assignmentReason">Assignment Reason</Label>
+                    <Textarea
+                      id="assignmentReason"
+                      value={assignmentReason}
+                      onChange={(e) => setAssignmentReason(e.target.value)}
+                      placeholder="Explain why you're taking this case (e.g., similar case history, jurisdiction, etc.)"
+                      className="mt-1"
+                      rows={3}
+                    />
+                  </div>
+                )}
+
+                {searchedVictim && (
+                  <div className="flex space-x-2">
+                    <Button
+                      onClick={handleAssignVictim}
+                      disabled={assignVictimMutation.isPending || !assignmentReason.trim()}
+                      className="flex-1 bg-blue-600 hover:bg-blue-700"
+                    >
+                      {assignVictimMutation.isPending ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                          Assigning...
+                        </>
+                      ) : (
+                        <>
+                          <UserPlus className="w-4 h-4 mr-2" />
+                          Quick Assign
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      onClick={() => setActiveTab("case")}
+                      variant="outline"
+                      className="flex-1"
+                    >
+                      <FileText className="w-4 h-4 mr-2" />
+                      Add Case Info
+                    </Button>
+                  </div>
+                )}
+
+                {email.length >= 3 && !searchLoading && !searchedVictim && (
+                  <Alert>
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertDescription>
+                      No victim found with email "{email}". Please verify the email address or ensure the victim has an account.
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </TabsContent>
+
+              <TabsContent value="case" className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-semibold">Case Information</h4>
+                  <Button
+                    onClick={generateCaseNumber}
+                    variant="outline"
+                    size="sm"
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    Generate Case #
+                  </Button>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="caseNumber">Case Number</Label>
+                    <Input
+                      id="caseNumber"
+                      value={caseInfo.caseNumber}
+                      onChange={(e) => setCaseInfo({ ...caseInfo, caseNumber: e.target.value })}
+                      placeholder="CASE-2024-001"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="cryptoType">Cryptocurrency Type</Label>
+                    <select
+                      id="cryptoType"
+                      value={caseInfo.cryptoType}
+                      onChange={(e) => setCaseInfo({ ...caseInfo, cryptoType: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    >
+                      <option value="Bitcoin">Bitcoin (BTC)</option>
+                      <option value="Ethereum">Ethereum (ETH)</option>
+                      <option value="Litecoin">Litecoin (LTC)</option>
+                      <option value="Monero">Monero (XMR)</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div>
-                  <Label htmlFor="assignmentReason">Assignment Reason</Label>
-                  <Textarea
-                    id="assignmentReason"
-                    value={assignmentReason}
-                    onChange={(e) => setAssignmentReason(e.target.value)}
-                    placeholder="Explain why you're taking this case (e.g., similar case history, jurisdiction, etc.)"
-                    className="mt-1"
-                    rows={3}
+                  <Label htmlFor="walletAddress">Wallet Address</Label>
+                  <Input
+                    id="walletAddress"
+                    value={caseInfo.walletAddress}
+                    onChange={(e) => setCaseInfo({ ...caseInfo, walletAddress: e.target.value })}
+                    placeholder="Enter cryptocurrency wallet address"
                   />
                 </div>
-              )}
 
-              {searchedVictim && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="amount">Amount Lost (USD)</Label>
+                    <div className="relative">
+                      <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                      <Input
+                        id="amount"
+                        value={caseInfo.amount}
+                        onChange={(e) => setCaseInfo({ ...caseInfo, amount: e.target.value })}
+                        placeholder="0.00"
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="incidentDate">Incident Date</Label>
+                    <Input
+                      id="incidentDate"
+                      type="date"
+                      value={caseInfo.incidentDate}
+                      onChange={(e) => setCaseInfo({ ...caseInfo, incidentDate: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="riskLevel">Risk Level</Label>
+                  <select
+                    id="riskLevel"
+                    value={caseInfo.riskLevel}
+                    onChange={(e) => setCaseInfo({ ...caseInfo, riskLevel: e.target.value as CaseInfo['riskLevel'] })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="low">Low Risk</option>
+                    <option value="medium">Medium Risk</option>
+                    <option value="high">High Risk</option>
+                    <option value="critical">Critical Risk</option>
+                  </select>
+                </div>
+
+                <div>
+                  <Label htmlFor="description">Case Description</Label>
+                  <Textarea
+                    id="description"
+                    value={caseInfo.description}
+                    onChange={(e) => setCaseInfo({ ...caseInfo, description: e.target.value })}
+                    placeholder="Describe the incident, how the fraud occurred, any communication with scammers..."
+                    rows={4}
+                  />
+                </div>
+
+                <div className="flex space-x-2">
+                  <Button
+                    onClick={() => setActiveTab("evidence")}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    Add Evidence
+                  </Button>
+                  <Button
+                    onClick={handleAssignVictim}
+                    disabled={assignVictimMutation.isPending || !assignmentReason.trim()}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                  >
+                    {assignVictimMutation.isPending ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        Assigning...
+                      </>
+                    ) : (
+                      <>
+                        <UserPlus className="w-4 h-4 mr-2" />
+                        Assign with Case
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="evidence" className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-semibold">Evidence Files</h4>
+                  <Badge variant="secondary">{evidenceFiles.length} files</Badge>
+                </div>
+
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-sm text-gray-600 mb-2">
+                    Upload screenshots, transaction records, communication logs
+                  </p>
+                  <input
+                    type="file"
+                    multiple
+                    onChange={handleFileUpload}
+                    accept=".pdf,.jpg,.jpeg,.png,.txt,.doc,.docx"
+                    className="hidden"
+                    id="file-upload"
+                  />
+                  <Label htmlFor="file-upload">
+                    <Button variant="outline" className="cursor-pointer">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Choose Files
+                    </Button>
+                  </Label>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Supports: PDF, JPG, PNG, TXT, DOC, DOCX
+                  </p>
+                </div>
+
+                {evidenceFiles.length > 0 && (
+                  <div className="space-y-2">
+                    <h5 className="font-medium">Uploaded Files:</h5>
+                    {evidenceFiles.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <FileText className="w-5 h-5 text-blue-600" />
+                          <div>
+                            <p className="text-sm font-medium">{file.name}</p>
+                            <p className="text-xs text-gray-500">
+                              {(file.size / 1024 / 1024).toFixed(2)} MB
+                            </p>
+                          </div>
+                        </div>
+                        <Button
+                          onClick={() => removeFile(index)}
+                          variant="ghost"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <Button
                   onClick={handleAssignVictim}
                   disabled={assignVictimMutation.isPending || !assignmentReason.trim()}
@@ -186,21 +499,12 @@ export default function VictimAssignment() {
                   ) : (
                     <>
                       <UserPlus className="w-4 h-4 mr-2" />
-                      Assign to My Cases
+                      Assign with Case & Evidence
                     </>
                   )}
                 </Button>
-              )}
-
-              {email.length >= 3 && !searchLoading && !searchedVictim && (
-                <Alert>
-                  <AlertTriangle className="h-4 w-4" />
-                  <AlertDescription>
-                    No victim found with email "{email}". Please verify the email address or ensure the victim has an account.
-                  </AlertDescription>
-                </Alert>
-              )}
-            </div>
+              </TabsContent>
+            </Tabs>
           </DialogContent>
         </Dialog>
       </div>
