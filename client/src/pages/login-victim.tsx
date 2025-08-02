@@ -1,173 +1,194 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Shield, UserCheck, ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { Shield, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import { TEST_CREDENTIALS } from "@/constants/test-credentials";
 
-export default function LoginVictim() {
+export default function VictimLogin() {
   const [, setLocation] = useLocation();
+  const [email, setEmail] = useState(TEST_CREDENTIALS.VICTIM.email);
+  const [password, setPassword] = useState(TEST_CREDENTIALS.VICTIM.password);
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState(TEST_CREDENTIALS.VICTIM);
   const { toast } = useToast();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const loginMutation = useMutation({
+    mutationFn: async (credentials: { email: string; password: string }) => {
+      return apiRequest("/api/auth/login", {
+        method: "POST",
+        body: credentials,
+      });
+    },
+    onSuccess: (data) => {
+      localStorage.setItem("token", data.token);
+      toast({
+        title: "Login Successful",
+        description: "Welcome to the CryptoTrace Victim Portal",
+      });
+      setLocation("/victim-portal");
+    },
+    onError: (error) => {
+      toast({
+        title: "Login Failed",
+        description: error.message || "Invalid email or password",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) {
+      toast({
+        title: "Missing Information",
+        description: "Please enter both email and password",
+        variant: "destructive",
+      });
+      return;
+    }
+    loginMutation.mutate({ email, password });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    // Simulate authentication
-    setTimeout(() => {
-      setIsLoading(false);
-      
-      // Mock successful login - accept standard test credentials or specific case number
-      if ((formData.email === TEST_CREDENTIALS.VICTIM.email && formData.password === TEST_CREDENTIALS.VICTIM.password && formData.caseNumber === TEST_CREDENTIALS.VICTIM.caseNumber) || 
-          (formData.caseNumber && formData.email && formData.password)) {
-        localStorage.setItem('userType', 'victim');
-        localStorage.setItem('token', 'victim-mock-token');
-        toast({
-          title: "Login Successful",
-          description: "Welcome to your victim portal.",
-        });
-        setLocation('/victim-portal');
-      } else {
-        toast({
-          title: "Login Failed",
-          description: "Please check your case number, email, and password.",
-          variant: "destructive",
-        });
-      }
-    }, 1500);
+  const fillTestCredentials = () => {
+    setEmail(TEST_CREDENTIALS.VICTIM.email);
+    setPassword(TEST_CREDENTIALS.VICTIM.password);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-6">
-      <div className="max-w-md w-full">
-        {/* Back Button */}
-        <Button 
-          variant="ghost" 
-          className="mb-6 hover:bg-white hover:bg-opacity-20"
-          onClick={() => setLocation('/login')}
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Portal Selection
-        </Button>
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-6">
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <div className="flex justify-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-orange-600 to-red-600 rounded-full flex items-center justify-center">
+              <Shield className="w-8 h-8 text-white" />
+            </div>
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900">CryptoTrace</h1>
+          <p className="text-gray-600">Victim Portal Access</p>
+        </div>
 
-        <Card className="shadow-xl border-0">
-          <CardHeader className="text-center space-y-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl mx-auto flex items-center justify-center">
-              <UserCheck className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <CardTitle className="text-2xl">Victim Portal Access</CardTitle>
-              <p className="text-slate-600 mt-2">Enter your case details to access your investigation</p>
-            </div>
+        {/* Login Card */}
+        <Card className="border-orange-200 shadow-lg">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl text-center text-orange-800">
+              Sign In
+            </CardTitle>
+            <p className="text-sm text-center text-gray-600">
+              Access your cryptocurrency investigation cases
+            </p>
           </CardHeader>
-          
           <CardContent>
-            <Alert className="mb-6 border-blue-200 bg-blue-50">
-              <Shield className="w-4 h-4" />
-              <AlertDescription className="text-blue-800">
-                Your case number and login credentials were provided by the investigating officer or department.
-              </AlertDescription>
-            </Alert>
-
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="caseNumber">Case Number</Label>
-                <Input
-                  id="caseNumber"
-                  name="caseNumber"
-                  placeholder="CRY-2024-78432"
-                  value={formData.caseNumber}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="your.email@example.com"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="email" className="text-orange-800">
+                  Email Address
+                </Label>
                 <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={handleInputChange}
+                    id="email"
+                    type="email"
+                    placeholder="victim@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="pl-10 border-orange-200 focus:border-orange-500 focus:ring-orange-500"
                     required
                   />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </Button>
                 </div>
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900"
-                disabled={isLoading}
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-orange-800">
+                  Password
+                </Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="pl-10 pr-10 border-orange-200 focus:border-orange-500 focus:ring-orange-500"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white"
+                disabled={loginMutation.isPending}
               >
-                {isLoading ? "Signing In..." : "Access My Cases"}
+                {loginMutation.isPending ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    Signing In...
+                  </>
+                ) : (
+                  "Sign In"
+                )}
               </Button>
             </form>
 
-            <div className="mt-6 space-y-4 text-center">
-              <div className="text-sm text-slate-600">
-                <p>Demo Credentials:</p>
-                <p className="font-mono text-xs bg-slate-100 p-2 rounded mt-1">
-                  Case: CRY-2024-78432<br />
-                  Email: test@test.com<br />
-                  Password: password
-                </p>
-              </div>
+            {/* Test Credentials */}
+            <div className="mt-4">
+              <Alert className="border-orange-200 bg-orange-50">
+                <AlertDescription className="text-sm">
+                  <strong>Demo Access:</strong> Use the pre-filled credentials or{" "}
+                  <button
+                    onClick={fillTestCredentials}
+                    className="text-orange-600 hover:text-orange-700 underline"
+                  >
+                    click here
+                  </button>{" "}
+                  to auto-fill them.
+                </AlertDescription>
+              </Alert>
+            </div>
 
-              <div className="pt-4 border-t">
-                <p className="text-sm text-slate-600 mb-3">Need help accessing your case?</p>
-                <div className="space-y-2">
-                  <Button variant="outline" className="w-full" size="sm">
-                    Contact Assigned Officer
-                  </Button>
-                  <Button variant="outline" className="w-full" size="sm">
-                    Reset Password
-                  </Button>
-                </div>
-              </div>
+            {/* Navigation */}
+            <div className="mt-6 pt-4 border-t border-orange-200 text-center space-y-2">
+              <p className="text-sm text-gray-600">
+                Are you a law enforcement officer?{" "}
+                <button
+                  onClick={() => setLocation("/login")}
+                  className="text-orange-600 hover:text-orange-700 underline"
+                >
+                  Officer Login
+                </button>
+              </p>
+              <p className="text-sm text-gray-600">
+                Administrator access?{" "}
+                <button
+                  onClick={() => setLocation("/login-admin")}
+                  className="text-orange-600 hover:text-orange-700 underline"
+                >
+                  Admin Portal
+                </button>
+              </p>
             </div>
           </CardContent>
         </Card>
 
-        <div className="text-center mt-6">
-          <p className="text-xs text-blue-600">
-            Your information is protected with bank-level security
+        {/* Help Text */}
+        <div className="text-center">
+          <p className="text-sm text-gray-500">
+            Need help? Contact your assigned police officer or call the CryptoTrace support line.
           </p>
         </div>
       </div>

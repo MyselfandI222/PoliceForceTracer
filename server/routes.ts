@@ -235,6 +235,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
         isActive: true,
       });
 
+      // Create test victim user if it doesn't exist (dev environment only)
+      if (process.env.NODE_ENV === 'development') {
+        try {
+          const existingVictim = await storage.getUserByEmail("victim@test.com");
+          if (!existingVictim) {
+            await storage.createUser({
+              email: "victim@test.com",
+              password: await bcrypt.hash("victim123", 10),
+              name: "Jane Victim",
+              department: "N/A",
+              badgeNumber: "N/A",
+              role: "victim",
+              isActive: true,
+            });
+            console.log("Created test victim user");
+          }
+        } catch (error) {
+          console.log("Victim user already exists or creation failed");
+        }
+      }
+
       const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '24h' });
       
       res.json({
@@ -466,42 +487,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api/ai", aiRoutes);
 
   // Get victim's assigned officer
-  app.get("/api/victim/officer-assignment", async (req, res) => {
+  app.get("/api/victim/officer-assignment", authenticateToken, async (req, res) => {
     try {
-      // Mock victim ID (in production, get from authenticated user)
-      const victimId = 1;
+      // Check if user is authenticated
+      if (!req.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      // Only victims can access this endpoint
+      if (req.user.role !== 'victim') {
+        return res.status(403).json({ message: 'Access denied. Victims only.' });
+      }
       
-      // Mock active assignment
-      const assignment = {
-        id: 1,
-        officer: {
-          id: 2,
-          name: "Sarah Johnson",
-          badgeNumber: "12345",
-          department: "Metro PD Cyber Crimes",
-          email: "s.johnson@metropd.gov",
-          phone: "(555) 123-4567",
-          specialization: "Cryptocurrency Crimes",
-          rank: "Detective"
-        },
-        assignedAt: "2024-01-15T10:30:00Z",
-        assignedBy: "victim_request",
-        isActive: true
-      };
-      
-      res.json(assignment);
+      // Mock: No assignment initially for victims
+      // In production, query victimOfficerAssignments table
+      res.status(404).json({ message: 'No officer assigned' });
     } catch (error) {
       console.error('Error fetching officer assignment:', error);
       res.status(500).json({ message: 'Failed to fetch officer assignment' });
     }
   });
 
-  // Search for officers by badge number
-  app.get("/api/officers/search", async (req, res) => {
+  // Search for officers by badge number (accessible to victims)
+  app.get("/api/officers/search", authenticateToken, async (req, res) => {
     try {
+      // Check if user is authenticated
+      if (!req.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      // Only victims can search for officers to assign
+      if (req.user.role !== 'victim') {
+        return res.status(403).json({ message: 'Access denied. Victims only.' });
+      }
+
       const badgeNumber = req.query.badgeNumber as string;
       
-      // Mock officer search (in production, query database)
+      if (!badgeNumber || badgeNumber.length < 3) {
+        return res.status(400).json({ message: 'Badge number must be at least 3 characters' });
+      }
+      
+      // Mock officer search - in production, query users table where role='officer'
       const mockOfficers = [
         {
           id: 2,
@@ -539,19 +565,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Assign officer to victim
-  app.post("/api/victim/assign-officer", async (req, res) => {
+  app.post("/api/victim/assign-officer", authenticateToken, async (req, res) => {
     try {
+      // Check if user is authenticated
+      if (!req.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      // Only victims can assign officers to themselves
+      if (req.user.role !== 'victim') {
+        return res.status(403).json({ message: 'Access denied. Victims only.' });
+      }
+
       const { officerId, assignedBy } = req.body;
-      // Mock victim ID (in production, get from authenticated user)
-      const victimId = 1;
+      const victimId = req.user.id;
       
-      // Mock assignment creation
+      // Mock assignment creation - in production, insert into victimOfficerAssignments table
       const assignment = {
         id: Date.now(),
         victimId,
         officerId,
         assignedAt: new Date().toISOString(),
-        assignedBy,
+        assignedBy: assignedBy || 'victim_request',
         isActive: true
       };
       
@@ -572,41 +607,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Victim case submission endpoint (updated to use assigned officer)
-  app.post("/api/victim/submit-case", async (req, res) => {
+  app.post("/api/victim/submit-case", authenticateToken, async (req, res) => {
     try {
+      // Check if user is authenticated
+      if (!req.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      // Only victims can submit cases
+      if (req.user.role !== 'victim') {
+        return res.status(403).json({ message: 'Access denied. Victims only.' });
+      }
+
       const { traceId, actionType, reason, recoveryAmount, riskLevel } = req.body;
-      // Mock victim ID (in production, get from authenticated user)
-      const victimId = 1;
+      const victimId = req.user.id;
       
-      // Get assigned officer (mock)
-      const assignedOfficer = {
-        id: 2,
-        name: "Detective Sarah Johnson",
-        badgeNumber: "12345",
-        department: "Metro PD Cyber Crimes"
-      };
-      
-      // Create case submission in database
-      const caseSubmission = {
-        id: `CASE-${Date.now()}`,
-        victimId,
-        officerId: assignedOfficer.id,
-        originalTraceId: traceId,
-        actionType,
-        reason,
-        recoveryAmount,
-        riskLevel,
-        status: 'submitted',
-        submittedAt: new Date().toISOString()
-      };
-      
-      console.log('Victim case submitted to assigned officer:', caseSubmission);
-      
-      res.json({
-        success: true,
-        message: `Case successfully submitted to ${assignedOfficer.name}`,
-        caseId: caseSubmission.id,
-        assignedOfficer: assignedOfficer.name
+      // Check if victim has an assigned officer (in production, query victimOfficerAssignments)
+      // For now, return error if no officer assigned
+      res.status(400).json({
+        success: false,
+        message: 'Please assign a police officer first before submitting cases',
+        requiresOfficerAssignment: true
       });
     } catch (error) {
       console.error('Error submitting victim case:', error);

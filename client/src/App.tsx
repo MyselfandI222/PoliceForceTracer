@@ -53,6 +53,7 @@ function Router() {
       <Route path="/login" component={LoginSelector} />
       <Route path="/login/officer" component={Login} />
       <Route path="/login/victim" component={LoginVictim} />
+      <Route path="/login-victim" component={LoginVictim} />
       <Route path="/login/admin" component={LoginAdmin} />
       <Route path="/signup" component={Signup} />
       
