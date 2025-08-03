@@ -20,10 +20,8 @@ export default function VictimLogin() {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => {
-      return apiRequest("/api/auth/login", {
-        method: "POST",
-        body: credentials,
-      });
+      const response = await apiRequest("POST", "/api/auth/login", credentials);
+      return await response.json();
     },
     onSuccess: (data) => {
       localStorage.setItem("token", data.token);
