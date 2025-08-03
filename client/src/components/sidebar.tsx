@@ -1,9 +1,21 @@
 import { Link, useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { Shield, BarChart3, Search, FolderOpen, FileText, Settings, HelpCircle, LogOut, Activity, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { logout } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 
-const navigation = [
+// Navigation for officers (without AI Assistant)
+const officerNavigation = [
+  { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
+  { name: "Live Demo", href: "/demo", icon: Activity },
+  { name: "Active Traces", href: "/traces", icon: Search },
+  { name: "Case Files", href: "/cases", icon: FolderOpen },
+  { name: "Reports", href: "/reports", icon: FileText },
+];
+
+// Navigation for victims and admins (with AI Assistant)
+const defaultNavigation = [
   { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
   { name: "AI Assistant", href: "/ai-assistant", icon: Brain },
   { name: "Live Demo", href: "/demo", icon: Activity },
@@ -19,6 +31,14 @@ const accountNavigation = [
 
 export function Sidebar() {
   const [location] = useLocation();
+  
+  const { data: user } = useQuery({
+    queryKey: ["/api/auth/me"],
+    queryFn: getCurrentUser,
+  });
+
+  // Use different navigation based on user role
+  const navigation = user?.role === 'officer' ? officerNavigation : defaultNavigation;
 
   const handleLogout = () => {
     logout();
