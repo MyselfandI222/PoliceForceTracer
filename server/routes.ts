@@ -561,6 +561,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
           phone: "(555) 345-6789",
           address: "456 Oak Ave, City, State",
           incidentType: "Bitcoin Scam"
+        },
+        {
+          id: 6,
+          name: "Sarah Johnson",
+          email: "sarah.johnson@gmail.com",
+          phone: "(555) 456-7890",
+          address: "789 Pine St, City, State",
+          incidentType: "Ethereum Theft"
+        },
+        {
+          id: 7,
+          name: "Mike Chen",
+          email: "mike.chen@email.com",
+          phone: "(555) 567-8901",
+          address: "321 Oak Dr, City, State",
+          incidentType: "NFT Fraud"
+        },
+        {
+          id: 8,
+          name: "Lisa Rodriguez",
+          email: "lisa.rodriguez@hotmail.com",
+          phone: "(555) 678-9012",
+          address: "654 Elm Ave, City, State",
+          incidentType: "Crypto Investment Scam"
         }
       ];
       
@@ -574,6 +598,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error searching for victim:', error);
       res.status(500).json({ message: 'Failed to search for victim' });
+    }
+  });
+
+  // Get all available victims for assignment (officers only)
+  app.get("/api/victims", authenticateToken, async (req, res) => {
+    try {
+      // Check if user is authenticated
+      if (!req.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      // Only officers can view available victims
+      if (req.user.role !== 'officer' && req.user.role !== 'admin' && req.user.role !== 'super_admin') {
+        return res.status(403).json({ message: 'Access denied. Officers only.' });
+      }
+
+      // Mock all available victims - in production, query users table where role='victim'
+      const allVictims = [
+        {
+          id: 4,
+          name: "Jane Victim",
+          email: "victim@test.com",
+          phone: "(555) 234-5678",
+          address: "123 Main St, City, State",
+          incidentType: "Cryptocurrency Fraud"
+        },
+        {
+          id: 5,
+          name: "John Doe",
+          email: "john.doe@email.com",
+          phone: "(555) 345-6789",
+          address: "456 Oak Ave, City, State",
+          incidentType: "Bitcoin Scam"
+        },
+        {
+          id: 6,
+          name: "Sarah Johnson",
+          email: "sarah.johnson@gmail.com",
+          phone: "(555) 456-7890",
+          address: "789 Pine St, City, State",
+          incidentType: "Ethereum Theft"
+        },
+        {
+          id: 7,
+          name: "Mike Chen",
+          email: "mike.chen@email.com",
+          phone: "(555) 567-8901",
+          address: "321 Oak Dr, City, State",
+          incidentType: "NFT Fraud"
+        },
+        {
+          id: 8,
+          name: "Lisa Rodriguez",
+          email: "lisa.rodriguez@hotmail.com",
+          phone: "(555) 678-9012",
+          address: "654 Elm Ave, City, State",
+          incidentType: "Crypto Investment Scam"
+        }
+      ];
+      
+      res.json(allVictims);
+    } catch (error) {
+      console.error('Error fetching all victims:', error);
+      res.status(500).json({ message: 'Failed to fetch victims' });
     }
   });
 

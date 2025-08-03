@@ -63,6 +63,12 @@ export default function VictimAssignment() {
     retry: false,
   });
 
+  // Get all available victims
+  const { data: allVictims, isLoading: allVictimsLoading } = useQuery({
+    queryKey: ['/api/victims'],
+    retry: false,
+  });
+
   // Search for victim by email
   const { data: searchedVictim, isLoading: searchLoading } = useQuery({
     queryKey: ['/api/victims/search', { email }],
@@ -81,6 +87,11 @@ export default function VictimAssignment() {
     enabled: email.length >= 3,
     retry: false,
   });
+
+  // Filter victims based on search
+  const filteredVictims = email.length >= 3 && searchedVictim 
+    ? [searchedVictim] 
+    : allVictims || [];
 
   // Assign victim with case info mutation
   const assignVictimMutation = useMutation({
@@ -202,55 +213,67 @@ export default function VictimAssignment() {
               
               <TabsContent value="search" className="space-y-4">
               <div>
-                <Label htmlFor="email">Victim Email Address</Label>
+                <Label htmlFor="email">Search Victim by Email (Optional)</Label>
                 <div className="relative mt-1">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter victim email address"
+                    placeholder="Filter by email address..."
                     className="pl-10"
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-1">
-                  Enter at least 3 characters to search for a victim
+                  Leave empty to see all available victims, or type to filter by email
                 </p>
               </div>
 
-              {searchLoading && (
+              {(allVictimsLoading || searchLoading) && (
                 <div className="text-center py-4">
                   <div className="animate-spin w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full mx-auto"></div>
-                  <p className="text-sm text-gray-600 mt-2">Searching for victim...</p>
+                  <p className="text-sm text-gray-600 mt-2">Loading victims...</p>
                 </div>
               )}
 
-              {searchedVictim && (
-                <Card className="border-blue-200 bg-blue-50">
-                  <CardContent className="p-4">
-                    <div className="space-y-3">
-                      <div>
-                        <h4 className="font-semibold text-blue-900">{searchedVictim.name}</h4>
-                        <p className="text-blue-700 text-sm">{searchedVictim.incidentType}</p>
-                      </div>
-                      
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center gap-2 text-blue-600">
-                          <Mail className="w-4 h-4" />
-                          <span>{searchedVictim.email}</span>
+              {filteredVictims && filteredVictims.length > 0 && (
+                <div className="space-y-3 max-h-60 overflow-y-auto">
+                  <Label>Available Victims ({filteredVictims.length})</Label>
+                  {filteredVictims.map((victim: any) => (
+                    <Card 
+                      key={victim.id} 
+                      className={`border cursor-pointer transition-colors ${
+                        searchedVictim?.id === victim.id 
+                          ? 'border-blue-200 bg-blue-50' 
+                          : 'border-gray-200 hover:border-blue-300 hover:bg-blue-25'
+                      }`}
+                      onClick={() => {
+                        setEmail(victim.email);
+                        // This will trigger the search query
+                      }}
+                    >
+                      <CardContent className="p-4">
+                        <div className="space-y-2">
+                          <div>
+                            <h4 className="font-semibold text-slate-900">{victim.name}</h4>
+                            <p className="text-slate-600 text-sm">{victim.incidentType}</p>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 gap-2 text-sm">
+                            <div className="flex items-center gap-2 text-slate-500">
+                              <Mail className="w-3 h-3" />
+                              <span>{victim.email}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-slate-500">
+                              <Phone className="w-3 h-3" />
+                              <span>{victim.phone}</span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2 text-blue-600">
-                          <Phone className="w-4 h-4" />
-                          <span>{searchedVictim.phone}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-blue-600">
-                          <MapPin className="w-4 h-4" />
-                          <span>{searchedVictim.address}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               )}
 
                 {searchedVictim && (
