@@ -14,6 +14,7 @@ import {
   type User 
 } from "@shared/schema";
 import aiRoutes from "./routes/ai";
+import { handleAIHelperChat } from "./routes/ai-helper";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || "sk_test_...";
@@ -485,6 +486,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // AI routes for OpenAI integration
   app.use("/api/ai", aiRoutes);
+  
+  // AI Helper chat endpoint
+  app.post("/api/ai-helper/chat", handleAIHelperChat);
 
   // Get victim's assigned officer
   app.get("/api/victim/officer-assignment", authenticateToken, async (req, res) => {
