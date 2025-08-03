@@ -27,13 +27,14 @@ import {
   FileText,
   Bell,
   Shield,
-  Download
+  Download,
+  UserPlus,
+  Users
 } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Dashboard() {
-  const [showTraceForm, setShowTraceForm] = useState(false);
   const [selectedReport, setSelectedReport] = useState(null);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [, setLocation] = useLocation();
@@ -60,16 +61,7 @@ export default function Dashboard() {
 
   const recentTraces = traces.slice(0, 3);
 
-  const handleStartTrace = () => {
-    setShowTraceForm(true);
-  };
 
-  const handleUploadCase = () => {
-    toast({
-      title: "Upload Evidence",
-      description: "Evidence file upload system will be available in the next update.",
-    });
-  };
 
   const generateReport = async (traceId: number) => {
     try {
@@ -132,19 +124,7 @@ export default function Dashboard() {
     );
   }
 
-  if (showTraceForm) {
-    return (
-      <Layout>
-        <div className="p-6">
-          <TraceForm 
-            onSuccess={() => setShowTraceForm(false)}
-            onCancel={() => setShowTraceForm(false)}
-            userType="officer"
-          />
-        </div>
-      </Layout>
-    );
-  }
+
 
   return (
     <Layout>
@@ -249,37 +229,22 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Officer-specific Victim Assignment Section */}
-        {user?.role === 'officer' || user?.role === 'admin' || user?.role === 'super_admin' ? (
-          <div className="mb-8">
-            <VictimAssignment />
-          </div>
-        ) : null}
+
 
         {/* Quick Actions & Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-          {/* Quick Actions */}
+          {/* Officer Information */}
           <div className="lg:col-span-1">
             <Card>
               <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
+                <CardTitle>Officer Portal</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button 
-                  className="w-full bg-primary hover:bg-blue-700"
-                  onClick={handleStartTrace}
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Submit Case Information
-                </Button>
-                <Button 
-                  variant="outline"
-                  className="w-full"
-                  onClick={handleUploadCase}
-                >
-                  <Upload className="w-4 h-4 mr-2" />
-                  Upload Evidence Files
-                </Button>
+                <div className="text-center py-4">
+                  <UserPlus className="w-12 h-12 mx-auto mb-3 text-blue-600" />
+                  <h3 className="font-semibold text-slate-900 mb-2">Victim Assignment</h3>
+                  <p className="text-sm text-slate-600 mb-4">Case information and evidence files can only be submitted when assigning victims to your cases. Use the "Assign New Victim" button to begin.</p>
+                </div>
                 <div className="pt-2 space-y-2">
                   <AdminContact />
                   <AddAdminDialog />
@@ -287,38 +252,38 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
-            {/* Service Tier Info */}
+            {/* Workflow Info */}
             <Card className="mt-6 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
               <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-2">Officer Role</h3>
-                <p className="text-blue-100 mb-4">Case Information Submission</p>
+                <h3 className="text-lg font-semibold mb-2">Officer Workflow</h3>
+                <p className="text-blue-100 mb-4">Victim-Centered Case Management</p>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span>Your Role:</span>
-                    <span>Input case details only</span>
+                    <span>Step 1:</span>
+                    <span>Assign victim to case</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Investigation:</span>
-                    <span>Automated by system</span>
+                    <span>Step 2:</span>
+                    <span>Add case information</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Processing Choice:</span>
-                    <span>Victim decides</span>
+                    <span>Step 3:</span>
+                    <span>Upload evidence files</span>
                   </div>
                 </div>
                 <div className="mt-4 p-3 bg-blue-700 rounded-lg text-sm">
                   <div className="flex items-center gap-2 mb-1">
-                    <Clock className="h-4 w-4" />
-                    <span className="font-medium">Automated Processing</span>
+                    <Users className="h-4 w-4" />
+                    <span className="font-medium">Victim Assignment Required</span>
                   </div>
-                  <p className="text-blue-100">System processes all cases automatically - free weekly (Wednesdays) or instant premium (victim choice)</p>
+                  <p className="text-blue-100">Case information and evidence can only be submitted through the victim assignment process</p>
                 </div>
                 <div className="mt-4 p-3 bg-blue-600/20 border border-blue-300 rounded text-sm">
                   <div className="flex items-center gap-2 text-blue-200 mb-1">
                     <Shield className="h-4 w-4" />
-                    <span className="font-medium">Officer Workflow</span>
+                    <span className="font-medium">Secure Process</span>
                   </div>
-                  <p className="text-blue-200">Submit case information → System investigates → Victim chooses processing speed → Automated analysis → Reports generated</p>
+                  <p className="text-blue-200">Assign victim → Add case details → Upload evidence → Victim chooses processing speed → Investigation begins</p>
                 </div>
               </CardContent>
             </Card>
