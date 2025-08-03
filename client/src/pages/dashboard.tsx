@@ -324,6 +324,11 @@ export default function Dashboard() {
             </Card>
           </div>
 
+          {/* Victim Assignment Section */}
+          <div className="lg:col-span-2">
+            <VictimAssignment />
+          </div>
+
           {/* Recent Activity */}
           <div className="lg:col-span-2">
             <Card>

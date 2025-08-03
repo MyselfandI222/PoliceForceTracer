@@ -90,10 +90,7 @@ export default function VictimAssignment() {
       caseInfo?: CaseInfo,
       evidenceFiles?: EvidenceFile[]
     }) => {
-      return apiRequest('/api/officer/assign-victim-with-case', {
-        method: 'POST',
-        body: data
-      });
+      return apiRequest('POST', '/api/officer/assign-victim-with-case', data);
     },
     onSuccess: () => {
       toast({
@@ -538,7 +535,7 @@ export default function VictimAssignment() {
                 </div>
               ))}
             </div>
-          ) : assignedVictims && assignedVictims.length > 0 ? (
+          ) : assignedVictims && Array.isArray(assignedVictims) && assignedVictims.length > 0 ? (
             <div className="space-y-4">
               {assignedVictims.map((victim: any) => (
                 <div key={victim.id} className="border border-gray-200 rounded-lg p-4">
