@@ -88,6 +88,20 @@ export class MemStorage implements IStorage {
     };
     this.users.set(adminUser.id, adminUser);
 
+    // Create test victim user for easy victim portal testing
+    const victimUser: User = {
+      id: this.currentUserId++,
+      email: "victim@test.com",
+      password: "$2b$10$.ctZ.P/.M5vudJ5X4UHzoe7F8/x64KmbowFkZrazdtPJQdi5dkU9u", // "victim123"
+      name: "Jane Victim",
+      department: "N/A",
+      badgeNumber: "N/A",
+      role: "victim",
+      isActive: true,
+      createdAt: new Date(),
+    };
+    this.users.set(victimUser.id, victimUser);
+
     // Create some sample traces for demo
     const sampleTrace1: Trace = {
       id: this.currentTraceId++,
